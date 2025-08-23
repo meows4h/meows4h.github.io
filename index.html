@@ -9,6 +9,20 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="icon" type="image/x-icon" href="./images/icon.png">
+  
+  <style>
+  p{
+    color:black;
+  }
+  
+  h3 {
+    color:rgb(77, 42, 59)
+  }
+  
+  span {
+    color:rgb(77, 42, 59)
+  }
+  </style>
 </head>
 
 <body>
@@ -188,35 +202,13 @@
   <p style="color:rgb(195, 100, 140);">Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-pink">w3.css</a></p>
 </footer>
  
+<script type="text/javascript" src="./js/index.js"></script>
+<script type="text/javascript" src="./js/typewriter.js"></script>
+
 <script>
-// Modal Image Gallery
-function onClick(element) {
-  document.getElementById("img01").src = element.src;
-  document.getElementById("modal01").style.display = "block";
-  var captionText = document.getElementById("caption");
-  captionText.innerHTML = element.alt;
-}
-
-// Change style of navbar on scroll
-window.onscroll = function() {myFunction()};
-function myFunction() {
-    var navbar = document.getElementById("myNavbar");
-    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        navbar.className = "w3-bar" + " w3-card" + " w3-animate-top" + " w3-white";
-    } else {
-        navbar.className = navbar.className.replace(" w3-card w3-animate-top w3-white", "");
-    }
-}
-
-// Used to toggle the menu on small screens when clicking on the menu button
-function toggleFunction() {
-    var x = document.getElementById("navDemo");
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-    } else {
-        x.className = x.className.replace(" w3-show", "");
-    }
-}
+  var type_pace = 185;
+  var typewriter_text = "ROX BEECHER"
+  typewriter_load(typewriter_text, type_pace);
 </script>
 
 </body>
