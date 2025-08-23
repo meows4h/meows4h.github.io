@@ -36,9 +36,6 @@
     <a href="#about" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-user"></i> ABOUT</a>
     <a href="#portfolio" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-th"></i> PORTFOLIO</a>
     <a href="#contact" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-envelope"></i> CONTACT</a>
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
-      <i class="fa fa-search"></i>
-    </a>
   </div>
 
   <!-- Navbar on small screens -->
@@ -46,14 +43,13 @@
     <a href="#about" class="w3-bar-item w3-button" onclick="toggleFunction()">ABOUT</a>
     <a href="#portfolio" class="w3-bar-item w3-button" onclick="toggleFunction()">PORTFOLIO</a>
     <a href="#contact" class="w3-bar-item w3-button" onclick="toggleFunction()">CONTACT</a>
-    <a href="#" class="w3-bar-item w3-button">SEARCH</a>
   </div>
 </div>
 
 <!-- First Parallax Image with Logo Text -->
 <div class="bgimg-1 w3-display-container w3-opacity-min" id="home">
   <div class="w3-display-middle" style="white-space:nowrap;">
-    <span class="w3-center w3-padding-large w3-black w3-xlarge w3-wide w3-animate-opacity">MY <span class="w3-hide-small">WEBSITE</span> LOGO</span>
+    <span class="w3-center w3-padding-large w3-black w3-xlarge w3-wide w3-animate-opacity" id="typewriter"><span class="w3-hide-small"></span></span>
   </div>
 </div>
 
@@ -89,7 +85,6 @@
 </div>
 
 <div class="w3-row w3-center w3-dark-grey w3-padding-16">
-  something could go here
   <!--<div class="w3-quarter w3-section">
     <span class="w3-xlarge">14+</span><br>
     Partners
@@ -111,7 +106,7 @@
 <!-- Second Parallax Image with Portfolio Text -->
 <div class="bgimg-2 w3-display-container w3-opacity-min">
   <div class="w3-display-middle">
-    <span class="w3-xxlarge w3-text-white w3-wide">PORTFOLIO</span>
+    <span class="w3-xxlarge w3-text-white w3-wide">Projects Overview</span>
   </div>
 </div>
 
@@ -123,37 +118,37 @@
   <!-- Responsive Grid. Four columns on tablets, laptops and desktops. Will stack on mobile devices/small screens (100% width) -->
   <div class="w3-row-padding w3-center">
     <div class="w3-col m3">
-      <img src="/images/p1.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="The mist over the mountains">
+      <img src="/images/p1.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity">
     </div>
 
     <div class="w3-col m3">
-      <img src="/images/p2.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="Coffee beans">
+      <img src="/images/p2.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity">
     </div>
 
     <div class="w3-col m3">
-      <img src="/images/p3.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="Bear closeup">
+      <img src="/images/p3.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity">
     </div>
 
     <div class="w3-col m3">
-      <img src="/images/p4.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="Quiet ocean">
+      <img src="/images/p4.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity">
     </div>
   </div>
 
   <div class="w3-row-padding w3-center w3-section">
     <div class="w3-col m3">
-      <img src="/images/p5.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="The mist">
+      <img src="/images/p5.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity">
     </div>
 
     <div class="w3-col m3">
-      <img src="/images/p6.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="My beloved typewriter">
+      <img src="/images/p6.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity">
     </div>
 
     <div class="w3-col m3">
-      <img src="/images/p7.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="Empty ghost train">
+      <img src="/images/p7.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity">
     </div>
 
     <div class="w3-col m3">
-      <img src="/images/p8.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="Sailing">
+      <img src="/images/p8.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity">
     </div>
     <button class="w3-button w3-padding-large w3-light-grey" style="margin-top:64px">LOAD MORE</button>
   </div>
@@ -177,7 +172,7 @@
 
 <!-- Container (Contact Section) -->
 <div class="w3-content w3-container w3-padding-64" id="contact">
-  <h3 class="w3-center">WHERE TO REACH ME</h3>
+  <h3 class="w3-center">Where to Reach Me</h3>
 
   <div class="w3-row w3-padding-32 w3-section">
     <div class="w3-col m4 w3-container">
@@ -207,7 +202,7 @@
 
 <script>
   var type_pace = 185;
-  var typewriter_text = "ROX BEECHER"
+  var typewriter_text = "Rox Beecher"
   typewriter_load(typewriter_text, type_pace);
 </script>
 
