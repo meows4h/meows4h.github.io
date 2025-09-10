@@ -8,11 +8,16 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const material = new THREE.MeshBasicMaterial( { color: 0x0ffaf0 } );
 const cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
 
 camera.position.z = 5;
+
+const sizes = {
+    width:window.innerWidth,
+    height:window.innerHeight
+}
 
 window.addEventListener('resize',()=>{
   sizes.width = window.innerWidth
