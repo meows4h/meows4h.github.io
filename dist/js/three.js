@@ -35,13 +35,13 @@ let speed_up = 1;
 
 function animate() {
   if (speed_up == 1 && speed_factor < 3) {
-      speed_factor += 0.01 * speed_factor;
+      speed_factor += 0.01 * (speed_factor + 0.01);
   } else if (speed_factor > 3) {
       speed_up = 0;
   }
 
   if (speed_up == 0 && speed_factor > 0.05) {
-      speed_factor -= 0.01 * speed_factor;
+      speed_factor -= 0.01 * (speed_factor + 0.01);
   } else if (speed_factor < 0.05) {
       speed_up = 1;
   }
