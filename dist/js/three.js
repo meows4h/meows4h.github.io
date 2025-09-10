@@ -30,9 +30,23 @@ window.addEventListener('resize',()=>{
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 })
 
+let speed_factor = 0;
+let speed_up = 1;
+
 function animate() {
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
+  if (speed_up == 1 && speed_factor < 3) {
+      speed_factor += 0.01 * speed_factor;
+  } else if (speed_factor > 3) {
+      speed_up = 0;
+  }
+
+  if (speed_up == 0 && speed_factor > 0.05) {
+      speed_factor -= 0.01 * speed_factor;
+  } else if (speed_factor < 0.05) {
+      speed_up = 1;
+  }
+  cube.rotation.x += 0.01 * speed_factor;
+  cube.rotation.y += 0.01 * speed_factor;
   renderer.render( scene, camera );
 }
 renderer.setAnimationLoop( animate );
