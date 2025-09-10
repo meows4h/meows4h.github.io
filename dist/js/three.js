@@ -30,7 +30,7 @@ window.addEventListener('resize',()=>{
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 })
 
-let speed_factor = 0;
+let speed_factor = 0.01;
 let speed_up = 1;
 
 function animate() {
