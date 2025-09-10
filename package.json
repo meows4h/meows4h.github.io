@@ -14,6 +14,10 @@
   "author": "rox",
   "license": "ISC",
   "dependencies": {
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.3.0",
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.5"
   }
 }
