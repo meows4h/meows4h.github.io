@@ -1,0 +1,19 @@
+{
+  "name": "meows4h.github.io",
+  "version": "1.0.0",
+  "description": "trying something",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "meows4h.github.io"
+  },
+  "author": "rox",
+  "license": "ISC",
+  "dependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
