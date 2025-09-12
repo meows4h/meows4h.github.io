@@ -59,7 +59,7 @@
 			import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 			import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 
-			let camera, scene, renderer, controls;
+			let camera, scene, renderer, controls, effect;
 
 			const objects = [];
 
@@ -269,7 +269,7 @@
 				effect.setSize( window.innerWidth, window.innerHeight );
 				effect.domElement.style.color = 'green';
 				effect.domElement.style.backgroundColor = 'black';
-				document.body.appendChild( renderer.domElement );
+				document.body.appendChild( effect.domElement );
 
 				//
 
