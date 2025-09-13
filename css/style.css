@@ -15,31 +15,31 @@ body, html {
 
 /* First image (full page) */
 .bgimg-1 {
-  background-image: url('../images/destiny-concept-art-crypt.jpg');
+  background-image: url('../images/irl_p1.JPG');
   min-height: 100%;
 }
 
 /* Second image */
 .bgimg-2 {
-  background-image: url("../images/destiny-concept-art-bw1.jpg");
+  background-image: url("../images/irl_p2.JPG");
   min-height: 400px;
 }
 
 /* Third image */
 .bgimg-3 {
-  background-image: url("../images/destiny-concept-art-forest1.jpg");
+  background-image: url("../images/irl_p3.JPG");
   min-height: 400px;
 }
 
 /* Fourth image */
 .bgimg-4 {
-  background-image: url("../images/destiny-concept-art-aoo.jpg");
+  background-image: url("../images/irl_p4.JPG");
   min-height: 300px;
 }
 
 /* Fifth image */
 .bgimg-5 {
-  background-image: url("../images/destiny-concept-art-forest1.jpg");
+  background-image: url("../images/xiv_p2.png");
   min-height: 300px;
 }
 
