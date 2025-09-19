@@ -300,6 +300,75 @@
 
 			}
 
+			function getMagnitude2D(compA, compB) {
+				let composite_len = 0;
+				composite_len = ((compA ** 2) + (compB ** 2)) ** 1/2
+				return composite_len;
+			}
+
+			// function dotProduct(vectorA, vectorB) {
+			//   if (vectorA.length !== vectorB.length) {
+			//     throw new Error("Vectors must have the same dimension for dot product calculation.");
+			//   }
+			
+			//   let result = 0;
+			//   for (let i = 0; i < vectorA.length; i++) {
+			//     result += vectorA[i] * vectorB[i];
+			//   }
+			//   return result;
+			// }
+
+			function dotProduct(vectorA, vectorB) {
+				let result = 0;
+				result += vectorA.x * vectorB.x;
+				result += vectorA.z * vectorB.z;
+				return result;
+			}
+
+			function groundAccelerate(delta) {
+				let add_speed, accel_speed, curr_speed;
+
+				curr_speed = dotProduct(velocity, direction);
+				add_speed = 320 - curr_speed;
+				if (add_speed <= 0) {
+					return 0;
+				}
+				
+				accel_speed = 10 * 320 * delta;
+				if (accel_speed > add_speed) {
+					accel_speed = add_speed;
+				}
+
+				for (let i = 0; i < 3; i++) {
+					velocity[i] += accel_speed * direction[i];
+				}
+			}
+
+			function airAccelerate(wish_velocity, delta) {
+				let add_speed, wish_speed, accel_speed, curr_speed;
+
+				wish_speed = getMagnitude2D(wish_velocity.x, wish_velocity.z);
+				if (wish_speed > 30) {
+					wish_speed = 30;
+				}
+
+				curr_speed = dotProduct(velocity, wish_velocity);
+				add_speed = wish_speed - curr_speed;
+				if (add_speed <= 0) {
+					return 0;
+				}
+
+				accel_speed = 10 * 320 * delta;
+				if (accel_speed > add_speed) {
+					accel_speed = add_speed;
+				}
+
+				for (let i = 0; i < 3; i++) {
+					velocity[i] += accel_speed * wish_velocity[i];
+				}
+				
+			}
+
 			function animate() {
 
 				const time = performance.now();
@@ -315,45 +384,44 @@
 
 					const delta = ( time - prevTime ) / 1000;
 
-					const sprintSpeed = 1.67;
+					// velocity.x -= velocity.x * 10.0 * delta;
+					// velocity.z -= velocity.z * 10.0 * delta;
 
-					velocity.x -= velocity.x * 10.0 * delta;
-					velocity.z -= velocity.z * 10.0 * delta;
-
-					velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+					velocity.y -= 9.8 * 1.0 * delta; // 100.0 = mass
 
 					direction.z = Number( moveForward ) - Number( moveBackward );
 					direction.x = Number( moveRight ) - Number( moveLeft );
 					direction.normalize(); // this ensures consistent movements in all directions
 
-					if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
-					if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
-
-					if ( moveSprint ) {
-						velocity.z *= sprintSpeed;
-						velocity.x *= sprintSpeed;
-					}
+					// if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
+					// if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
 
 					if ( onObject === true ) {
 
 						velocity.y = Math.max( 0, velocity.y );
 						canJump = true;
+						groundAccelerate(delta);
 
-					}
-
-					controls.moveRight( - velocity.x * delta );
-					controls.moveForward( - velocity.z * delta );
-
-					controls.object.position.y += ( velocity.y * delta ); // new behavior
-
-					if ( controls.object.position.y < 10 ) {
+					} else if ( controls.object.position.y < 10 ) {
 
 						velocity.y = 0;
 						controls.object.position.y = 10;
-
 						canJump = true;
+						groundAccelerate(delta);
 
+					} else {
+						let wish_velocity;
+						wish_velocity.x = direction.x * 320;
+						wish_velocity.z = direction.z * 320;
+						airAccelerate(wish_velocity, delta);
 					}
+
+					// controls.moveRight( - velocity.x * delta );
+					// controls.moveForward( - velocity.z * delta );
+					controls.moveRight( - velocity.x );
+					controls.moveForward( - velocity.z );
+
+					controls.object.position.y += ( velocity.y * delta ); // new behavior
 
 				}
 
