@@ -34,6 +34,8 @@
 		</style>
 	</head>
 	<body>
+		<div id="location">information</div>
+		
 		<div id="blocker">
 			<div id="instructions">
 				<p style="font-size:36px">
@@ -331,7 +333,7 @@
 				curr_speed = dotProduct(velocity, direction);
 				add_speed = 320 - curr_speed;
 				if (add_speed <= 0) {
-					return 0;
+					return;
 				}
 				
 				accel_speed = 10 * 320 * delta;
@@ -339,9 +341,8 @@
 					accel_speed = add_speed;
 				}
 
-				for (let i = 0; i < 3; i++) {
-					velocity[i] += accel_speed * direction[i];
-				}
+				velocity.x += accel_speed * direction.x;
+				velocity.z += accel_speed * direction.z;
 			}
 
 			function airAccelerate(wish_velocity, delta) {
@@ -355,7 +356,7 @@
 				curr_speed = dotProduct(velocity, wish_velocity);
 				add_speed = wish_speed - curr_speed;
 				if (add_speed <= 0) {
-					return 0;
+					return;
 				}
 
 				accel_speed = 10 * 320 * delta;
@@ -363,9 +364,8 @@
 					accel_speed = add_speed;
 				}
 
-				for (let i = 0; i < 3; i++) {
-					velocity[i] += accel_speed * wish_velocity[i];
-				}
+				velocity.x += accel_speed * wish_velocity.x;
+				velocity.z += accel_speed * wish_velocity.z;
 				
 			}
 
@@ -391,18 +391,20 @@
 
 					direction.z = Number( moveForward ) - Number( moveBackward );
 					direction.x = Number( moveRight ) - Number( moveLeft );
-					direction.normalize(); // this ensures consistent movements in all directions
+					//direction.normalize(); // this ensures consistent movements in all directions
 
 					// if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
 					// if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
 
 					if ( onObject === true ) {
+						console.log("onobject!");
 
 						velocity.y = Math.max( 0, velocity.y );
 						canJump = true;
 						groundAccelerate(delta);
 
 					} else if ( controls.object.position.y < 10 ) {
+						console.log("on ground!");
 
 						velocity.y = 0;
 						controls.object.position.y = 10;
@@ -410,19 +412,24 @@
 						groundAccelerate(delta);
 
 					} else {
+						console.log("in air!");
 						let wish_velocity = {
 							x: direction.x * 320,
 							z: direction.z * 320
 						};
+						console.log("wish_vel: " + wish_velocity);
 						airAccelerate(wish_velocity, delta);
 					}
 
+					console.log("velocity: " + velocity);
 					// controls.moveRight( - velocity.x * delta );
 					// controls.moveForward( - velocity.z * delta );
 					controls.moveRight( - velocity.x );
 					controls.moveForward( - velocity.z );
 
 					controls.object.position.y += ( velocity.y * delta ); // new behavior
+
+					document.getElementById("location").innerHTML = "position: " controls.object.position + "; velocity: " + velocity;
 
 				}
 
