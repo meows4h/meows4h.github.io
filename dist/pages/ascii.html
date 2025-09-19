@@ -410,9 +410,10 @@
 						groundAccelerate(delta);
 
 					} else {
-						let wish_velocity;
-						wish_velocity.x = direction.x * 320;
-						wish_velocity.z = direction.z * 320;
+						let wish_velocity = {
+							x: direction.x * 320,
+							z: direction.z * 320
+						};
 						airAccelerate(wish_velocity, delta);
 					}
 
