@@ -333,7 +333,7 @@
 				let result = 0;
 				result += vectorA.x * vectorB.x;
 				result += vectorA.z * vectorB.z;
-				console.log("DOT PROD = \nA: " + Object.values(vectorA) + "\nB: " + Object.values(vectorA) + "\nR: " + result);
+				//console.log("DOT PROD = \nA: " + Object.values(vectorA) + "\nB: " + Object.values(vectorA) + "\nR: " + result);
 				return result;
 			}
 
@@ -346,12 +346,13 @@
 					return;
 				}
 				
-				accel_speed = 10 * 320 * delta;
+				accel_speed = 0.5 * 320 * delta;
 				if (accel_speed > add_speed) {
 					accel_speed = add_speed;
 				}
-
-				console.log("GROUND ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nVEL: " + Object.values(velocity) + "\nDIR: " + Object.values(direction));
+				
+				console.log("DOT PROD = \nA: " + Object.values(velocity) + "\nB: " + Object.values(direction) + "\nR: " + curr_speed);
+				console.log("GROUND ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nVEL: " + Object.values(velocity) + "\nDIR: " + Object.values(direction) + "\nDELTA: " + delta);
 
 				velocity.x += accel_speed * direction.x;
 				velocity.z += accel_speed * direction.z;
@@ -371,12 +372,13 @@
 					return;
 				}
 
-				accel_speed = 10 * 320 * delta;
+				accel_speed = 0.5 * 320 * delta;
 				if (accel_speed > add_speed) {
 					accel_speed = add_speed;
 				}
 
-				console.log("AIR ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nWISH: " + wish_speed + "\nVEL: " + Object.values(velocity) + "\nWISH VEL: " + Object.values(wish_velocity));
+				console.log("DOT PROD = \nA: " + Object.values(velocity) + "\nB: " + Object.values(wish_velocity) + "\nR: " + curr_speed);
+				console.log("AIR ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nWISH: " + wish_speed + "\nVEL: " + Object.values(velocity) + "\nWISH VEL: " + Object.values(wish_velocity) + "\nDELTA: " + delta);
 
 				velocity.x += accel_speed * wish_velocity.x;
 				velocity.z += accel_speed * wish_velocity.z;
