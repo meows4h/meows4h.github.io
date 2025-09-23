@@ -79,9 +79,9 @@
 			let canJump = false;
 			let tryReset = false;
 
-			let glbl_Move = 320;
-			let glbl_Air = 30;
-			let glbl_Const = 0.5;
+			let glbl_Move = 10;
+			let glbl_Air = 0.7;
+			let glbl_Const = 0.2;
 
 			let prevTime = performance.now();
 			const velocity = new THREE.Vector3();
@@ -98,7 +98,7 @@
 
 				scene = new THREE.Scene();
 				scene.background = new THREE.Color( 0xffffff );
-				scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+				scene.fog = new THREE.Fog( 0xffffff, 0, 1600 );
 
 				const light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 2.5 );
 				light.position.set( 0.5, 1, 0.75 );
@@ -215,7 +215,7 @@
 
 				// floor
 
-				let floorGeometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
+				let floorGeometry = new THREE.PlaneGeometry( 20000, 20000, 1000, 1000 );
 				floorGeometry.rotateX( - Math.PI / 2 );
 
 				// vertex displacement
@@ -293,11 +293,11 @@
 
 				//
 
-				effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
-				effect.setSize( window.innerWidth, window.innerHeight );
-				effect.domElement.style.color = 'white';
-				effect.domElement.style.backgroundColor = 'black';
-				document.body.appendChild( effect.domElement );
+				// effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
+				// effect.setSize( window.innerWidth, window.innerHeight );
+				// effect.domElement.style.color = 'white';
+				// effect.domElement.style.backgroundColor = 'black';
+				// document.body.appendChild( effect.domElement );
 
 				//
 
@@ -311,7 +311,7 @@
 				camera.updateProjectionMatrix();
 
 				renderer.setSize( window.innerWidth, window.innerHeight );
-				effect.setSize( window.innerWidth, window.innerHeight );
+				//effect.setSize( window.innerWidth, window.innerHeight );
 
 			}
 
@@ -445,7 +445,7 @@
 						velocity.y = Math.max( 0, velocity.y );
 						canJump = true;
 
-					} else if ( controls.object.position.y <= 10 ) {
+					} else if ( Math.floor(controls.object.position.y) <= 10 ) {
 						//console.log("on ground!");
 
 						velocity.y = 0;
@@ -468,7 +468,8 @@
 
 				prevTime = time;
 
-				effect.render( scene, camera );
+				renderer.render( scene, camera );
+				//effect.render( scene, camera );
 
 			}
 
