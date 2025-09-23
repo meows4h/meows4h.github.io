@@ -401,7 +401,7 @@
 					// velocity.x -= velocity.x * 10.0 * delta;
 					// velocity.z -= velocity.z * 10.0 * delta;
 
-					velocity.y -= 9.8 * 1.0 * delta; // 100.0 = mass
+					velocity.y -= 9.8 * 50.0 * delta; // 100.0 = mass
 
 					direction.z = Number( moveForward ) - Number( moveBackward );
 					direction.x = Number( moveRight ) - Number( moveLeft );
@@ -409,6 +409,19 @@
 
 					// if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
 					// if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
+
+					if ((moveForward || moveBackward || moveLeft || moveRight) && (onObject || controls.object.position.y < 10)) {
+						groundAccelerate(delta);
+					} else if (controls.object.position.y >= 10) {
+						//console.log("in air!");
+						let wish_velocity = {
+							x: direction.x * 320,
+							z: direction.z * 320
+						};
+						//console.log("wish_vel: " + Object.values(wish_velocity));
+						airAccelerate(wish_velocity, delta);
+					}
+						
 
 					if ( tryReset == true ) {
 						controls.object.position.y = 10;
@@ -419,12 +432,11 @@
 						velocity.z = 0;
 					}
 					
-					if ( onObject === true ) {
+					if ( onObject == true ) {
 						//console.log("onobject!");
 
 						velocity.y = Math.max( 0, velocity.y );
 						canJump = true;
-						groundAccelerate(delta);
 
 					} else if ( controls.object.position.y < 10 ) {
 						//console.log("on ground!");
@@ -432,19 +444,10 @@
 						velocity.y = 0;
 						controls.object.position.y = 10;
 						canJump = true;
-						groundAccelerate(delta);
 
-					} else {
-						console.log("in air!");
-						let wish_velocity = {
-							x: direction.x * 320,
-							z: direction.z * 320
-						};
-						//console.log("wish_vel: " + Object.values(wish_velocity));
-						airAccelerate(wish_velocity, delta);
 					}
 
-					console.log("velocity: " + velocity);
+					//console.log("velocity: " + velocity);
 					// controls.moveRight( - velocity.x * delta );
 					// controls.moveForward( - velocity.z * delta );
 					controls.moveRight( - velocity.x );
