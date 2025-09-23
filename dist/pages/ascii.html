@@ -79,6 +79,10 @@
 			let canJump = false;
 			let tryReset = false;
 
+			let glbl_Move = 320;
+			let glbl_Air = 30;
+			let glbl_Const = 0.5;
+
 			let prevTime = performance.now();
 			const velocity = new THREE.Vector3();
 			const direction = new THREE.Vector3();
@@ -341,12 +345,12 @@
 				let add_speed, accel_speed, curr_speed;
 
 				curr_speed = dotProduct(velocity, direction);
-				add_speed = 320 - curr_speed;
+				add_speed = glbl_Move - curr_speed;
 				if (add_speed <= 0) {
 					return;
 				}
 				
-				accel_speed = 0.5 * 320 * delta;
+				accel_speed = glbl_Const * glbl_Move * delta;
 				if (accel_speed > add_speed) {
 					accel_speed = add_speed;
 				}
@@ -362,8 +366,8 @@
 				let add_speed, wish_speed, accel_speed, curr_speed;
 
 				wish_speed = getMagnitude2D(wish_velocity.x, wish_velocity.z);
-				if (wish_speed > 30) {
-					wish_speed = 30;
+				if (wish_speed > glbl_Air) {
+					wish_speed = glbl_Air;
 				}
 
 				curr_speed = dotProduct(velocity, wish_velocity);
@@ -372,7 +376,7 @@
 					return;
 				}
 
-				accel_speed = 0.5 * 320 * delta;
+				accel_speed = glbl_Const * glbl_Move * delta;
 				if (accel_speed > add_speed) {
 					accel_speed = add_speed;
 				}
@@ -405,20 +409,21 @@
 
 					velocity.y -= 9.8 * 50.0 * delta; // 100.0 = mass
 
-					direction.z = Number( moveForward ) - Number( moveBackward );
-					direction.x = Number( moveRight ) - Number( moveLeft );
+					direction.z = Number( moveBackward ) - Number( moveForward );
+					direction.x = Number( moveLeft ) - Number( moveRight );
 					//direction.normalize(); // this ensures consistent movements in all directions
 
 					// if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
 					// if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
 
-					if ((moveForward || moveBackward || moveLeft || moveRight) && (onObject || controls.object.position.y < 10)) {
+					if ((moveForward || moveBackward || moveLeft || moveRight) && (onObject || controls.object.position.y <= 10)) {
 						groundAccelerate(delta);
-					} else if (controls.object.position.y >= 10) {
+					} else if (controls.object.position.y > 10) {
 						//console.log("in air!");
 						let wish_velocity = {
-							x: direction.x * 320,
-							z: direction.z * 320
+							x: direction.x * glbl_Move,
+							y: 0,
+							z: direction.z * glbl_Move
 						};
 						//console.log("wish_vel: " + Object.values(wish_velocity));
 						airAccelerate(wish_velocity, delta);
@@ -440,7 +445,7 @@
 						velocity.y = Math.max( 0, velocity.y );
 						canJump = true;
 
-					} else if ( controls.object.position.y < 10 ) {
+					} else if ( controls.object.position.y <= 10 ) {
 						//console.log("on ground!");
 
 						velocity.y = 0;
