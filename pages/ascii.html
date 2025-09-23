@@ -446,7 +446,7 @@
 						velocity.y = Math.max( 0, velocity.y );
 						canJump = true;
 
-					} else if ( Math.floor(controls.object.position.y) <= 10 ) {
+					} else if ( Math.floor(controls.object.position.y) < 10 ) {
 						//console.log("on ground!");
 
 						velocity.y = 0;
