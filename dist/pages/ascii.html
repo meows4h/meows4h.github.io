@@ -34,7 +34,7 @@
 		</style>
 	</head>
 	<body>
-		<div id="location" style="color: black;">information</div>
+		<div id="location" style="color: red; position: fixed; left: 5px; text-align: left;">information</div>
 		
 		<div id="blocker">
 			<div id="instructions">
@@ -409,6 +409,9 @@
 						controls.object.position.y = 10;
 						controls.object.position.x = 0;
 						controls.object.position.z = 0;
+						velocity.y = 0;
+						velocity.x = 0;
+						velocity.z = 0;
 					}
 					
 					if ( onObject === true ) {
@@ -444,7 +447,7 @@
 
 					controls.object.position.y += ( velocity.y * delta ); // new behavior
 
-					document.getElementById("location").innerHTML = "position: " + Object.values(controls.object.position) + "; velocity: " + Object.values(velocity);
+					document.getElementById("location").innerHTML = "x: " + Math.floor(controls.object.position.x) + "\ny: " + Math.floor(controls.object.position.y) + "\nz" + Math.floor(controls.object.position.z) + "\nvel x: " + Math.floor(velocity.x) + "\nvel y: " + Math.floor(velocity.y) + "\nvel z: " + Math.floor(velocity.z);
 
 				}
 
