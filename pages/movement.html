@@ -377,7 +377,7 @@
 				}
 				
 				console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_direction) + "\nR: " + curr_speed);
-				console.log("GROUND ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nVEL: " + Object.values(inp_velocity) + "\nDIR: " + Object.values(direction) + "\nDELTA: " + delta);
+				console.log("GROUND ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nVEL: " + Object.values(inp_velocity) + "\nDIR: " + Object.values(wish_direction) + "\nDELTA: " + delta);
 
         		ret_velocity = new THREE.Vector3(accel_speed * wish_direction.x, 0, accel_speed * wish_direction.z);
 				return ret_velocity;
