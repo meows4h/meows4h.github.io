@@ -293,12 +293,12 @@
 
 				//
 
-				// effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
-				// effect.setSize( window.innerWidth, window.innerHeight );
-				// effect.domElement.style.color = 'white';
-				// effect.domElement.style.backgroundColor = 'black';
-				// document.body.appendChild( effect.domElement );
-				document.body.appendChild( renderer.domElement );
+				effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
+				effect.setSize( window.innerWidth, window.innerHeight );
+				effect.domElement.style.color = 'white';
+				effect.domElement.style.backgroundColor = 'black';
+				document.body.appendChild( effect.domElement );
+				//document.body.appendChild( renderer.domElement );
 
 				//
 
@@ -321,18 +321,6 @@
 				composite_len = ((compA ** 2) + (compB ** 2)) ** 1/2
 				return composite_len;
 			}
-
-			// function dotProduct(vectorA, vectorB) {
-			//   if (vectorA.length !== vectorB.length) {
-			//     throw new Error("Vectors must have the same dimension for dot product calculation.");
-			//   }
-			
-			//   let result = 0;
-			//   for (let i = 0; i < vectorA.length; i++) {
-			//     result += vectorA[i] * vectorB[i];
-			//   }
-			//   return result;
-			// }
 
 			function dotProduct(vectorA, vectorB) {
 				let result = 0;
@@ -469,8 +457,8 @@
 
 				prevTime = time;
 
-				renderer.render( scene, camera );
-				//effect.render( scene, camera );
+				// renderer.render( scene, camera );
+				effect.render( scene, camera );
 
 			}
 
