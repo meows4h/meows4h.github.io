@@ -403,7 +403,7 @@
 				}
 
 				console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_velocity) + "\nR: " + curr_speed);
-				console.log("AIR ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nWISH: " + wish_speed + "\nVEL: " + Object.values(velocity) + "\nWISH VEL: " + Object.values(wish_velocity) + "\nDELTA: " + delta);
+				console.log("AIR ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nWISH: " + wish_speed + "\nVEL: " + Object.values(inp_velocity) + "\nWISH VEL: " + Object.values(wish_velocity) + "\nDELTA: " + delta);
 
         		ret_velocity = new THREE.Vector3(accel_speed * wish_velocity.x, 0, accel_speed * wish_velocity.z);
 				return ret_velocity;
@@ -504,7 +504,7 @@
 
 			}
 
-			const loader = new GLTFLoader().setPath( './models/gltf/' );
+			const loader = new GLTFLoader().setPath( './models/' );
 
 			loader.load( 'collision-world.glb', ( gltf ) => {
 
