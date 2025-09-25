@@ -447,7 +447,9 @@
 	  				if ( keyStates[ 'KeyW' ] ) {
 	  
 	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Move );
-	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
+						const temp_2 = groundAccelerate(playerVelocity, temp_vec, deltaTime);
+						console.log("TEMP 2: " + temp_2);
+	  					playerVelocity.add( temp_2 );
 	  
 	  				}
 	  
