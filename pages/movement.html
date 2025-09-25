@@ -385,7 +385,8 @@
 				console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_direction) + "\nR: " + curr_speed);
 				console.log("GROUND ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nVEL: " + Object.values(inp_velocity) + "\nDIR: " + Object.values(wish_direction) + "\nDELTA: " + delta);
 
-        		let ret_velocity = new THREE.Vector3(accel_speed * wish_direction.x, 0, accel_speed * wish_direction.z);
+        		const ret_velocity = new THREE.Vector3(accel_speed * wish_direction.x, 0, accel_speed * wish_direction.z);
+				console.log("RETURN VELOCITY: " + ret_velocity);
 				return ret_velocity;
 			}
 
@@ -411,7 +412,8 @@
 				console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_velocity) + "\nR: " + curr_speed);
 				console.log("AIR ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nWISH: " + wish_speed + "\nVEL: " + Object.values(inp_velocity) + "\nWISH VEL: " + Object.values(wish_velocity) + "\nDELTA: " + delta);
 
-        		let ret_velocity = new THREE.Vector3(accel_speed * wish_velocity.x, 0, accel_speed * wish_velocity.z);
+        		const ret_velocity = new THREE.Vector3(accel_speed * wish_velocity.x, 0, accel_speed * wish_velocity.z);
+				console.log("RETURN VELOCITY: " + ret_velocity);
 				return ret_velocity;
 				
 			}
