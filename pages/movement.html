@@ -374,7 +374,7 @@
 				curr_speed = dotProduct(inp_velocity, wish_direction);
 				add_speed = glbl_Move - curr_speed;
 				if (add_speed <= 0) {
-					return;
+					return new THREE.Vector3();
 				}
 				
 				accel_speed = glbl_Const * glbl_Move * delta;
@@ -401,7 +401,7 @@
 				curr_speed = dotProduct(inp_velocity, wish_velocity);
 				add_speed = wish_speed - curr_speed;
 				if (add_speed <= 0) {
-					return;
+					return new THREE.Vector3();
 				}
 
 				accel_speed = glbl_Const * glbl_Move * delta;
