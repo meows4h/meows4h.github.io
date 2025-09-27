@@ -84,16 +84,16 @@
 			stats.domElement.style.top = '0px';
 			container.appendChild( stats.domElement );
 
-		    const glbl_Move = 14;
-		    const glbl_Air = 1.5;
+		    const glbl_Move = 20;
+		    const glbl_Air = 3;
 		    const glbl_Const = 10;
       
-			const GRAVITY = 12;
+			const GRAVITY = 11;
 
 			const NUM_SPHERES = 100;
 			const SPHERE_RADIUS = 0.2;
 
-			const STEPS_PER_FRAME = 45;
+			const STEPS_PER_FRAME = 30;
 
 			const sphereGeometry = new THREE.IcosahedronGeometry( SPHERE_RADIUS, 5 );
 			const sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xdede8d } );
@@ -133,9 +133,9 @@
 			const vector2 = new THREE.Vector3();
 			const vector3 = new THREE.Vector3();
 
-			const vertex = new THREE.Vector3();
-			const color = new THREE.Color();
-			loadPlane();
+			// const vertex = new THREE.Vector3();
+			// const color = new THREE.Color();
+			// loadPlane();
 
 			document.addEventListener( 'keydown', ( event ) => {
 
@@ -172,7 +172,18 @@
 
 				}
 
-				console.log("Y: " + camera.rotation.y + "\nX: " + camera.rotation.x);
+				// clamping maybe?
+				
+				if ( camera.rotation.y >= ( Math.PI / 2 )) {
+					camera.rotation.y = ( Math.PI / 2 ) 
+				}
+				
+				if ( camera.rotation.y <= ( -Math.PI / 2 )) {
+					camera.rotation.y = ( -Math.PI / 2 ) 
+				}
+				
+
+				// console.log("Y: " + camera.rotation.y + "\nX: " + camera.rotation.x);
 
 			} );
 
@@ -240,8 +251,8 @@
 
 					playerVelocity.y -= GRAVITY * deltaTime;
 
-					// small air resistance
-					damping *= 0.07;
+					// removed air resistance
+					damping *= 0.00;
 
 				}
 
@@ -644,7 +655,7 @@
 
 				}
 
-				document.getElementById("location").innerHTML = "x: " + Math.floor(camera.position.x) + "<br>y: " + Math.floor(camera.position.y) + "<br>z: " + Math.floor(camera.position.z) + "<br>vel x: " + Math.floor(playerVelocity.x) + "<br>vel y: " + Math.floor(playerVelocity.y) + "<br>vel z: " + Math.floor(playerVelocity.z) + "<br>speed: " + getMagnitude2D(getForwardVector().x, getForwardVector().z);
+				document.getElementById("location").innerHTML = "x: " + Math.floor(camera.position.x) + "<br>y: " + Math.floor(camera.position.y) + "<br>z: " + Math.floor(camera.position.z) + "<br>vel x: " + Math.floor(playerVelocity.x) + "<br>vel y: " + Math.floor(playerVelocity.y) + "<br>vel z: " + Math.floor(playerVelocity.z) + "<br>speed: " + getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z));
 
 				renderer.render( scene, camera );
 
