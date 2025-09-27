@@ -84,11 +84,11 @@
 			stats.domElement.style.top = '0px';
 			container.appendChild( stats.domElement );
 
-		    const glbl_Move = 7;
-		    const glbl_Air = 0.8;
-		    const glbl_Const = 0.5;
+		    const glbl_Move = 14;
+		    const glbl_Air = 1.5;
+		    const glbl_Const = 0.7;
       
-			const GRAVITY = 30;
+			const GRAVITY = 25;
 
 			const NUM_SPHERES = 100;
 			const SPHERE_RADIUS = 0.2;
@@ -447,9 +447,7 @@
 	  				if ( keyStates[ 'KeyW' ] ) {
 	  
 	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Move );
-						const temp_2 = groundAccelerate(playerVelocity, temp_vec, deltaTime);
-						console.log("TEMP 2: " + temp_2);
-	  					playerVelocity.add( temp_2 );
+	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
 	  
@@ -476,7 +474,7 @@
 
 					if ( keyStates[ 'Space' ] ) {
 
-						playerVelocity.y = 15;
+						playerVelocity.y = 6;
 
 					}
 
