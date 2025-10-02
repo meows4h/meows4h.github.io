@@ -15,4 +15,4 @@ Within the `dist` directory, there are a couple of files:
 
 ## Extras
 - `meows4h.github.io/pages/ascii.html` shows off a 3D playspace with a moveable camera, controls, collision checking, as well as rendering the output to ASCII characters
-- - `meows4h.github.io/pages/movement.html` shows off a 3D playspace with all the same as `ascii.html` but it more properly incorperates the Quake movement implementation
+- `meows4h.github.io/pages/movement.html` shows off a 3D playspace with all the same as `ascii.html` but it more properly incorperates the Quake movement implementation
