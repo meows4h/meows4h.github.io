@@ -84,7 +84,7 @@
 			stats.domElement.style.top = '0px';
 			container.appendChild( stats.domElement );
 
-		    const glbl_Move = 20;
+		    const glbl_Ground = 20;
 		    const glbl_Air = 3;
 		    const glbl_Const = 10;
       
@@ -172,7 +172,7 @@
 
 				}
 
-				// clamping maybe?
+				// clamping view model
 				
 				if ( camera.rotation.x >= ( Math.PI / 2 )) {
 					camera.rotation.x = ( Math.PI / 2 ) 
@@ -181,9 +181,6 @@
 				if ( camera.rotation.x <= ( -Math.PI / 2 )) {
 					camera.rotation.x = ( -Math.PI / 2 ) 
 				}
-				
-
-				// console.log("Y: " + camera.rotation.y + "\nX: " + camera.rotation.x);
 
 			} );
 
@@ -389,12 +386,12 @@
 				let add_speed, accel_speed, curr_speed;
 
 				curr_speed = dotProduct(inp_velocity, wish_direction);
-				add_speed = glbl_Move - curr_speed;
+				add_speed = glbl_Ground - curr_speed;
 				if (add_speed <= 0) {
 					return new THREE.Vector3();
 				}
 				
-				accel_speed = glbl_Const * glbl_Move * delta;
+				accel_speed = glbl_Const * glbl_Ground * delta;
 				if (accel_speed > add_speed) {
 					accel_speed = add_speed;
 				}
@@ -421,7 +418,7 @@
 					return new THREE.Vector3();
 				}
 
-				accel_speed = glbl_Const * glbl_Move * delta;
+				accel_speed = glbl_Const * glbl_Ground * delta;
 				if (accel_speed > add_speed) {
 					accel_speed = add_speed;
 				}
@@ -477,28 +474,28 @@
         		if ( playerOnFloor ) {
 	  				if ( keyStates[ 'KeyW' ] ) {
 	  
-	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Move );
+	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Ground );
 	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyS' ] ) {
 	  
-	  					let temp_vec = getForwardVector().multiplyScalar( - glbl_Move );
+	  					let temp_vec = getForwardVector().multiplyScalar( - glbl_Ground );
 	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyA' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( - glbl_Move );
+	  					let temp_vec = getSideVector().multiplyScalar( - glbl_Ground );
 	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyD' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( glbl_Move );
+	  					let temp_vec = getSideVector().multiplyScalar( glbl_Ground );
 	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
@@ -513,28 +510,28 @@
 
          			if ( keyStates[ 'KeyW' ] ) {
   
-	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Move );
+	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Ground );
 	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyS' ] ) {
 	  
-	  					let temp_vec = getForwardVector().multiplyScalar( - glbl_Move );
+	  					let temp_vec = getForwardVector().multiplyScalar( - glbl_Ground );
 	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyA' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( - glbl_Move );
+	  					let temp_vec = getSideVector().multiplyScalar( - glbl_Ground );
 	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyD' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( glbl_Move );
+	  					let temp_vec = getSideVector().multiplyScalar( glbl_Ground );
 	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
@@ -579,6 +576,9 @@
 						helper.visible = value;
 
 					} );
+				let temp_obj = { x_vel: 0 }
+				gui.add( temp_obj, 'x velocity', 0 )
+					.listen;
 			
 			} );
 
@@ -656,6 +656,7 @@
 				}
 
 				document.getElementById("location").innerHTML = "x: " + Math.floor(camera.position.x) + "<br>y: " + Math.floor(camera.position.y) + "<br>z: " + Math.floor(camera.position.z) + "<br>vel x: " + Math.floor(playerVelocity.x) + "<br>vel y: " + Math.floor(playerVelocity.y) + "<br>vel z: " + Math.floor(playerVelocity.z) + "<br>speed: " + getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z));
+				temp_obj.feedback = playerVelocity.x;
 
 				renderer.render( scene, camera );
 
