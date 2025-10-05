@@ -577,7 +577,7 @@
 						helper.visible = value;
 
 					} );
-				gui.add( temp_obj, 'x_vel', -50, 50 )
+				gui.add( temp_obj, 'x_vel' )
 					.listen()
 					.disable();
 			
@@ -657,7 +657,7 @@
 				}
 
 				document.getElementById("location").innerHTML = "x: " + Math.floor(camera.position.x) + "<br>y: " + Math.floor(camera.position.y) + "<br>z: " + Math.floor(camera.position.z) + "<br>vel x: " + Math.floor(playerVelocity.x) + "<br>vel y: " + Math.floor(playerVelocity.y) + "<br>vel z: " + Math.floor(playerVelocity.z) + "<br>speed: " + getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z));
-				temp_obj.feedback = playerVelocity.x;
+				temp_obj.x_vel = playerVelocity.x;
 
 				renderer.render( scene, camera );
 
@@ -668,6 +668,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
