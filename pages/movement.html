@@ -84,12 +84,12 @@
 			stats.domElement.style.top = '0px';
 			container.appendChild( stats.domElement );
 
-		    const glbl_Ground = 20;
-		    const glbl_Air = 3;
-		    const glbl_Const = 10;
+		    let glbl_Ground = 20;
+		    let glbl_Air = 3;
+		    let glbl_Const = 10;
 			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0 };
       
-			const GRAVITY = 11;
+			let GRAVITY = 11;
 
 			const NUM_SPHERES = 100;
 			const SPHERE_RADIUS = 0.2;
@@ -573,13 +573,31 @@
 				const helper = new OctreeHelper( worldOctree );
 				helper.visible = false;
 				scene.add( helper );
-
+				
 				const gui = new GUI( { width: 200 } );
 				gui.add( { debug: false }, 'debug' )
 					.onChange( function ( value ) {
 
 						helper.visible = value;
 
+					} );
+				gui.add( { air: 3 }, 'air', 0, 10 )
+					.onChange( function ( value ) {
+						
+						glbl_Air = value;
+						
+					} );
+				gui.add( { ground: 20 }, 'ground', 0, 100 )
+					.onChange( function ( value ) {
+						
+						glbl_Ground = value;
+						
+					} );
+				gui.add( { const: 20 }, 'const', 0, 100 )
+					.onChange( function ( value ) {
+						
+						glbl_Const = value;
+						
 					} );
 				gui.add( temp_obj, 'x_vel' )
 					.listen()
@@ -698,6 +716,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
