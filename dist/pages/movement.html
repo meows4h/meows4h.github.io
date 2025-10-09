@@ -101,7 +101,7 @@
 		    let glbl_Const = 10;
 			let glbl_Jump = 6;
 			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0 };
-			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0 };
+			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0, ground_dot: 0, air_dot: 0 };
       
 			let glbl_Gravity = 11;
 
@@ -405,6 +405,7 @@
 				let add_speed, accel_speed, curr_speed;
 
 				curr_speed = dotProduct(inp_velocity, wish_direction);
+				inp_obj.ground_dot = curr_speed;
 				add_speed = glbl_Ground - curr_speed;
 				if (add_speed <= 0) {
 					return new THREE.Vector3();
@@ -432,6 +433,7 @@
 				}
 
 				curr_speed = dotProduct(inp_velocity, wish_velocity);
+				inp_obj.air_dot = curr_speed;
 				add_speed = wish_speed - curr_speed;
 				if (add_speed <= 0) {
 					return new THREE.Vector3();
@@ -676,6 +678,12 @@
 				gui.add( inp_obj, 'vel_side_z' )
 					.listen()
 					.disable();
+				gui.add( inp_obj, 'ground_dot' )
+					.listen()
+					.disable();
+				gui.add( inp_obj, 'air_dot' )
+					.listen()
+					.disable();
 			
 			} );
 
@@ -772,6 +780,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
