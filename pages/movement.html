@@ -99,7 +99,9 @@
 		    let glbl_Ground = 20;
 		    let glbl_Air = 3;
 		    let glbl_Const = 10;
+			let glbl_Jump = 6;
 			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0 };
+			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0 };
       
 			let GRAVITY = 11;
 
@@ -413,11 +415,11 @@
 					accel_speed = add_speed;
 				}
 				
-				console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_direction) + "\nR: " + curr_speed);
-				console.log("GROUND ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nVEL: " + Object.values(inp_velocity) + "\nDIR: " + Object.values(wish_direction) + "\nDELTA: " + delta);
+				//console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_direction) + "\nR: " + curr_speed);
+				//console.log("GROUND ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nVEL: " + Object.values(inp_velocity) + "\nDIR: " + Object.values(wish_direction) + "\nDELTA: " + delta);
 
         		const ret_velocity = new THREE.Vector3(accel_speed * wish_direction.x, 0, accel_speed * wish_direction.z);
-				console.log("RETURN VELOCITY: " + ret_velocity);
+				//console.log("RETURN VELOCITY: " + ret_velocity);
 				return ret_velocity;
 			}
 
@@ -440,11 +442,11 @@
 					accel_speed = add_speed;
 				}
 
-				console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_velocity) + "\nR: " + curr_speed);
-				console.log("AIR ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nWISH: " + wish_speed + "\nVEL: " + Object.values(inp_velocity) + "\nWISH VEL: " + Object.values(wish_velocity) + "\nDELTA: " + delta);
+				//console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_velocity) + "\nR: " + curr_speed);
+				//console.log("AIR ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nWISH: " + wish_speed + "\nVEL: " + Object.values(inp_velocity) + "\nWISH VEL: " + Object.values(wish_velocity) + "\nDELTA: " + delta);
 
         		const ret_velocity = new THREE.Vector3(accel_speed * wish_velocity.x, 0, accel_speed * wish_velocity.z);
-				console.log("RETURN VELOCITY: " + ret_velocity);
+				//console.log("RETURN VELOCITY: " + ret_velocity);
 				return ret_velocity;
 				
 			}
@@ -492,6 +494,9 @@
 	  				if ( keyStates[ 'KeyW' ] ) {
 	  
 	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Ground );
+						inp_obj.vel_for_x = twoDecimals(temp_vec.x);
+						inp_obj.vel_for_y = twoDecimals(temp_vec.y);
+						inp_obj.vel_for_z = twoDecimals(temp_vec.z);
 	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
@@ -499,6 +504,9 @@
 	  				if ( keyStates[ 'KeyS' ] ) {
 	  
 	  					let temp_vec = getForwardVector().multiplyScalar( - glbl_Ground );
+						inp_obj.vel_for_x = twoDecimals(temp_vec.x);
+						inp_obj.vel_for_y = twoDecimals(temp_vec.y);
+						inp_obj.vel_for_z = twoDecimals(temp_vec.z);
 	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
@@ -506,6 +514,9 @@
 	  				if ( keyStates[ 'KeyA' ] ) {
 	  
 	  					let temp_vec = getSideVector().multiplyScalar( - glbl_Ground );
+						inp_obj.vel_side_x = twoDecimals(temp_vec.x);
+						inp_obj.vel_side_y = twoDecimals(temp_vec.y);
+						inp_obj.vel_side_z = twoDecimals(temp_vec.z);
 	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
@@ -513,13 +524,16 @@
 	  				if ( keyStates[ 'KeyD' ] ) {
 	  
 	  					let temp_vec = getSideVector().multiplyScalar( glbl_Ground );
+						inp_obj.vel_side_x = twoDecimals(temp_vec.x);
+						inp_obj.vel_side_y = twoDecimals(temp_vec.y);
+						inp_obj.vel_side_z = twoDecimals(temp_vec.z);
 	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 	  
 	  				}
 
 					if ( keyStates[ 'Space' ] ) {
 
-						playerVelocity.y = 6;
+						playerVelocity.y = glbl_Jump;
 
 					}
 
@@ -611,6 +625,12 @@
 						glbl_Const = value;
 						
 					} );
+				gui.add( { jump: 6 }, 'jump', 0, 50 )
+					.onChange ( function ( value ) {
+
+						glbl_Jump = value;
+
+					} );
 				gui.add( temp_obj, 'x_vel' )
 					.listen()
 					.disable();
@@ -630,6 +650,12 @@
 					.listen()
 					.disable();
 				gui.add( temp_obj, 'speed' )
+					.listen()
+					.disable();
+				gui.add( temp_ob, 'vel_for' )
+					.listen()
+					.disable();
+				gui.add( temp_obj, 'vel_side' )
 					.listen()
 					.disable();
 			
@@ -728,6 +754,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
