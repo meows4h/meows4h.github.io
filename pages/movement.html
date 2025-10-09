@@ -103,7 +103,7 @@
 			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0 };
 			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0 };
       
-			let GRAVITY = 11;
+			let glbl_Gravity = 11;
 
 			const NUM_SPHERES = 100;
 			const SPHERE_RADIUS = 0.2;
@@ -261,7 +261,7 @@
 
 				if ( ! playerOnFloor ) {
 
-					playerVelocity.y -= GRAVITY * deltaTime;
+					playerVelocity.y -= glbl_Gravity * deltaTime;
 
 					// removed air resistance
 					damping *= 0.00;
@@ -363,7 +363,7 @@
 
 					} else {
 
-						sphere.velocity.y -= GRAVITY * deltaTime;
+						sphere.velocity.y -= glbl_Gravity * deltaTime;
 
 					}
 
@@ -631,6 +631,12 @@
 						glbl_Jump = value;
 
 					} );
+				gui.add( { gravity: 11 }, 'gravity', -5, 40 )
+					.onChange ( function ( value ) {
+
+						glbl_Gravity = value;
+
+					} );
 				gui.add( temp_obj, 'x_vel' )
 					.listen()
 					.disable();
@@ -652,10 +658,22 @@
 				gui.add( temp_obj, 'speed' )
 					.listen()
 					.disable();
-				gui.add( temp_ob, 'vel_for' )
+				gui.add( inp_obj, 'vel_for_x' )
 					.listen()
 					.disable();
-				gui.add( temp_obj, 'vel_side' )
+				gui.add( inp_obj, 'vel_for_y' )
+					.listen()
+					.disable();
+				gui.add( inp_obj, 'vel_for_z' )
+					.listen()
+					.disable();
+				gui.add( inp_obj, 'vel_side_x' )
+					.listen()
+					.disable();
+				gui.add( inp_obj, 'vel_side_y' )
+					.listen()
+					.disable();
+				gui.add( inp_obj, 'vel_side_z' )
 					.listen()
 					.disable();
 			
@@ -754,6 +772,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
