@@ -401,6 +401,9 @@
 
 			function groundFriction(delta) {
 				let speed = getSpeed();
+				if (speed == 0) {
+					return;
+				}
 				let control = 0;
 				if (speed < glbl_StopValue) {
 					control = glbl_StopValue;
@@ -811,6 +814,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
