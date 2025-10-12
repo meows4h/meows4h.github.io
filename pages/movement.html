@@ -525,13 +525,13 @@
 	  
 	  				}
 
-					if ( keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] ) {
+					if ( keyStates[ 'KeyD' ] || keyStates[ 'KeyA' ] || keyStates[ 'KeyW' ] || keyStates[ 'KeyS' ] ) {
 
 						playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
 						
 					}
 					
-					else if ( !( keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] ) ) {
+					else if ( !( keyStates[ 'KeyD' ] || keyStates[ 'KeyA' ] || keyStates[ 'KeyW' ] || keyStates[ 'KeyS' ] ) ) {
 
 						let damping = Math.exp( - 4 * deltaTime ) - 1;
 						playerVelocity.addScaledVector( playerVelocity, damping );
@@ -784,6 +784,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
