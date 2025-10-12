@@ -522,7 +522,7 @@
 						// inp_obj.vel_for_y = twoDecimals(temp_vec.y);
 						// inp_obj.vel_for_z = twoDecimals(temp_vec.z);
 	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
-						direction_vector.add( getForwardVector().multiplyScalar( - glbl_Ground ) )
+						direction_vector.add( getForwardVector().multiplyScalar( - glbl_Ground ) );
 						
 	  				}
 	  
@@ -533,7 +533,7 @@
 						// inp_obj.vel_side_y = twoDecimals(temp_vec.y);
 						// inp_obj.vel_side_z = twoDecimals(temp_vec.z);
 	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
-						direction_vector.add( getSideVector().multiplyScalar( - glbl_Ground ) )
+						direction_vector.add( getSideVector().multiplyScalar( - glbl_Ground ) );
 	  
 	  				}
 	  
@@ -544,11 +544,13 @@
 						// inp_obj.vel_side_y = twoDecimals(temp_vec.y);
 						// inp_obj.vel_side_z = twoDecimals(temp_vec.z);
 	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
-						direction_vector.add( getSideVector().multiplyScalar( glbl_Ground ) )
+						direction_vector.add( getSideVector().multiplyScalar( glbl_Ground ) );
 	  
 	  				}
 
-					playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
+					if ( keyStates[ 'KeyD' ] || keyStates[ 'KeyA' ] || keyStates[ 'KeyW' ] || keyStates[ 'KeyS' ] ) {
+						playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
+					}
 					groundFriction(deltaTime);
 
 					if ( keyStates[ 'Space' ] ) {
@@ -809,6 +811,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
