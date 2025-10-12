@@ -100,6 +100,8 @@
 		    let glbl_Air = 3;
 		    let glbl_Const = 10;
 			let glbl_Jump = 6;
+			let glbl_Friction = 5;
+			let glbl_StopValue = 1;
 			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0 };
 			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0, ground_dot: 0, air_dot: 0 };
       
@@ -397,8 +399,29 @@
 				return result;
 			}
 
+			function groundFriction(delta) {
+				let speed = getSpeed();
+				let control = 0;
+				if (speed < glbl_StopValue) {
+					control = glbl_StopValue;
+				} else {
+					control = speed;
+				}
+
+				let new_speed = speed - (delta * control * glbl_Friction);
+				if (new_speed < 0) {
+					new_speed = 0;
+				}
+				new_speed /= speed;
+				playerVelocity.multiplyScalar(new_speed);
+			}
+
 			function twoDecimals(number) {
   				return Math.floor(number * 100) / 100;
+			}
+
+			function getSpeed() {
+				return twoDecimals(getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z)));
 			}
 
       		function groundAccelerate(inp_velocity, wish_direction, delta) {
@@ -525,18 +548,8 @@
 	  
 	  				}
 
-					if ( keyStates[ 'KeyD' ] || keyStates[ 'KeyA' ] || keyStates[ 'KeyW' ] || keyStates[ 'KeyS' ] ) {
-
-						playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
-						
-					}
-					
-					else if ( !( keyStates[ 'KeyD' ] || keyStates[ 'KeyA' ] || keyStates[ 'KeyW' ] || keyStates[ 'KeyS' ] ) ) {
-
-						let damping = Math.exp( - 4 * deltaTime ) - 1;
-						playerVelocity.addScaledVector( playerVelocity, damping );
-						
-					}
+					playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
+					groundFriction(deltaTime);
 
 					if ( keyStates[ 'Space' ] ) {
 
@@ -642,6 +655,18 @@
 					.onChange ( function ( value ) {
 
 						glbl_Gravity = value;
+
+					} );
+				gui.add( { friction: 5 }, 'friction', -5, 20 )
+					.onChange ( function ( value ) {
+
+						glbl_Friction = value;
+
+					} );
+				gui.add( { stop: 1 }, 'stop', 0, 10 )
+					.onChange ( function ( value ) {
+
+						glbl_StopValue = value;
 
 					} );
 				gui.add( temp_obj, 'x_vel' )
@@ -773,7 +798,7 @@
 				temp_obj.y_pos = twoDecimals(camera.position.y);
 				temp_obj.z_pos = twoDecimals(camera.position.z);
 
-				temp_obj.speed = twoDecimals(getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z)));
+				temp_obj.speed = getSpeed();
 
 				renderer.render( scene, camera );
 
@@ -784,6 +809,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
