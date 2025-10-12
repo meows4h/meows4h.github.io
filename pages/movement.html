@@ -237,6 +237,7 @@
 
 				if ( result ) {
 
+					// checking if object normal that player capsule is interacting with is facing upwards
 					playerOnFloor = result.normal.y > 0;
 
 					if ( ! playerOnFloor ) {
@@ -257,18 +258,17 @@
 
 			function updatePlayer( deltaTime ) {
 
-				let damping = Math.exp( - 4 * deltaTime ) - 1;
+				//let damping = Math.exp( - 4 * deltaTime ) - 1;
 
 				if ( ! playerOnFloor ) {
 
 					playerVelocity.y -= glbl_Gravity * deltaTime;
 
 					// removed air resistance
-					damping *= 0.00;
+					//damping *= 0.00;
 
 				}
-
-				playerVelocity.addScaledVector( playerVelocity, damping );
+				//playerVelocity.addScaledVector( playerVelocity, damping );
 
 				const deltaPosition = playerVelocity.clone().multiplyScalar( deltaTime );
 				playerCollider.translate( deltaPosition );
@@ -415,12 +415,8 @@
 				if (accel_speed > add_speed) {
 					accel_speed = add_speed;
 				}
-				
-				//console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_direction) + "\nR: " + curr_speed);
-				//console.log("GROUND ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nVEL: " + Object.values(inp_velocity) + "\nDIR: " + Object.values(wish_direction) + "\nDELTA: " + delta);
 
         		const ret_velocity = new THREE.Vector3(accel_speed * wish_direction.x, 0, accel_speed * wish_direction.z);
-				//console.log("RETURN VELOCITY: " + ret_velocity);
 				return ret_velocity;
 			}
 
@@ -444,11 +440,7 @@
 					accel_speed = add_speed;
 				}
 
-				//console.log("DOT PROD = \nA: " + Object.values(inp_velocity) + "\nB: " + Object.values(wish_velocity) + "\nR: " + curr_speed);
-				//console.log("AIR ACC = \nADD: " + add_speed + "\nACCEL: " + accel_speed + "\nCURR " + curr_speed + "\nWISH: " + wish_speed + "\nVEL: " + Object.values(inp_velocity) + "\nWISH VEL: " + Object.values(wish_velocity) + "\nDELTA: " + delta);
-
         		const ret_velocity = new THREE.Vector3(accel_speed * wish_velocity.x, 0, accel_speed * wish_velocity.z);
-				//console.log("RETURN VELOCITY: " + ret_velocity);
 				return ret_velocity;
 				
 			}
@@ -476,62 +468,75 @@
 
 			function controls( deltaTime ) {
 
+				let direction_vector = new THREE.Vector3();
+
 				if ( keyStates[ 'KeyR' ] ) {
 					playerVelocity.x = 0;
 					playerVelocity.y = 0;
 					playerVelocity.z = 0;
-					camera.position.x = 0;
-					camera.position.y = 0;
-					camera.position.z = 0;
 				}
 
 				if ( keyStates [ 'KeyP' ] ) {
 					playerVelocity.y = 10;
-					camera.position.y += 5;
 				}
 				
-				// gives a bit of air control
-				// const speedDelta = deltaTime * ( playerOnFloor ? 25 : 8 );
         		if ( playerOnFloor ) {
 	  				if ( keyStates[ 'KeyW' ] ) {
 	  
-	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Ground );
-						inp_obj.vel_for_x = twoDecimals(temp_vec.x);
-						inp_obj.vel_for_y = twoDecimals(temp_vec.y);
-						inp_obj.vel_for_z = twoDecimals(temp_vec.z);
-	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
+	     		//      let temp_vec = getForwardVector().multiplyScalar( glbl_Ground );
+						// inp_obj.vel_for_x = twoDecimals(temp_vec.x);
+						// inp_obj.vel_for_y = twoDecimals(temp_vec.y);
+						// inp_obj.vel_for_z = twoDecimals(temp_vec.z);
+	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
+						direction_vector.add( getForwardVector().multiplyScalar( glbl_Ground ) )
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyS' ] ) {
 	  
-	  					let temp_vec = getForwardVector().multiplyScalar( - glbl_Ground );
-						inp_obj.vel_for_x = twoDecimals(temp_vec.x);
-						inp_obj.vel_for_y = twoDecimals(temp_vec.y);
-						inp_obj.vel_for_z = twoDecimals(temp_vec.z);
-	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
-	  
+	  			// 		let temp_vec = getForwardVector().multiplyScalar( - glbl_Ground );
+						// inp_obj.vel_for_x = twoDecimals(temp_vec.x);
+						// inp_obj.vel_for_y = twoDecimals(temp_vec.y);
+						// inp_obj.vel_for_z = twoDecimals(temp_vec.z);
+	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
+						direction_vector.add( getForwardVector().multiplyScalar( - glbl_Ground ) )
+						
 	  				}
 	  
 	  				if ( keyStates[ 'KeyA' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( - glbl_Ground );
-						inp_obj.vel_side_x = twoDecimals(temp_vec.x);
-						inp_obj.vel_side_y = twoDecimals(temp_vec.y);
-						inp_obj.vel_side_z = twoDecimals(temp_vec.z);
-	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
+	  			// 		let temp_vec = getSideVector().multiplyScalar( - glbl_Ground );
+						// inp_obj.vel_side_x = twoDecimals(temp_vec.x);
+						// inp_obj.vel_side_y = twoDecimals(temp_vec.y);
+						// inp_obj.vel_side_z = twoDecimals(temp_vec.z);
+	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
+						direction_vector.add( getSideVector().multiplyScalar( - glbl_Ground ) )
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyD' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( glbl_Ground );
-						inp_obj.vel_side_x = twoDecimals(temp_vec.x);
-						inp_obj.vel_side_y = twoDecimals(temp_vec.y);
-						inp_obj.vel_side_z = twoDecimals(temp_vec.z);
-	  					playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
+	  			// 		let temp_vec = getSideVector().multiplyScalar( glbl_Ground );
+						// inp_obj.vel_side_x = twoDecimals(temp_vec.x);
+						// inp_obj.vel_side_y = twoDecimals(temp_vec.y);
+						// inp_obj.vel_side_z = twoDecimals(temp_vec.z);
+	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
+						direction_vector.add( getSideVector().multiplyScalar( glbl_Ground ) )
 	  
 	  				}
+
+					if ( keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] ) {
+
+						playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
+						
+					}
+					
+					else if ( !( keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] || keyStates[ 'KeyD' ] ) ) {
+
+						let damping = Math.exp( - 4 * deltaTime ) - 1;
+						playerVelocity.addScaledVector( playerVelocity, damping );
+						
+					}
 
 					if ( keyStates[ 'Space' ] ) {
 
@@ -760,7 +765,6 @@
 
 				}
 
-				//document.getElementById("location").innerHTML = "x: " + Math.floor(camera.position.x) + "<br>y: " + Math.floor(camera.position.y) + "<br>z: " + Math.floor(camera.position.z) + "<br>vel x: " + Math.floor(playerVelocity.x) + "<br>vel y: " + Math.floor(playerVelocity.y) + "<br>vel z: " + Math.floor(playerVelocity.z) + "<br>speed: " + getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z));
 				temp_obj.x_vel = twoDecimals(playerVelocity.x);
 				temp_obj.y_vel = twoDecimals(playerVelocity.y);
 				temp_obj.z_vel = twoDecimals(playerVelocity.z);
@@ -780,6 +784,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
