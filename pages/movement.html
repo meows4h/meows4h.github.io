@@ -613,7 +613,7 @@
 				
 				const gui = new GUI( { width: 200 } );
 				const movement = gui.addFolder( 'Movement' );
-				const camera = gui.addFolder( 'Camera' );
+				const camera_set = gui.addFolder( 'Camera' );
 				const position = gui.addFolder( 'Position Data' );
 				gui.add( { debug: false }, 'debug' )
 					.onChange( function ( value ) {
@@ -670,21 +670,21 @@
 						glbl_StopValue = value;
 
 					} );
-				camera.add( { fov: 100 }, 'fov', 5, 150 )
+				camera_set.add( { fov: 100 }, 'fov', 5, 150 )
 					.onChange ( function ( value ) {
 
 						camera.fov = value;
 						camera.updateProjectionMatrix();
 
 					} );
-				camera.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
+				camera_set.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
 					.onChange ( function ( value ) {
 
 						camera.near = value;
 						camera.updateProjectionMatrix();
 
 					} );
-				camera.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
+				camera_set.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
 					.onChange ( function ( value ) {
 
 						camera.far = value;
