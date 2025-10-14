@@ -105,7 +105,7 @@
 			let glbl_Jump = 6;
 			let glbl_Friction = 5;
 			let glbl_StopValue = 1;
-			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0 };
+			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0, render: 0 };
 			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0, ground_dot: 0, air_dot: 0 };
       
 			let glbl_Gravity = 11;
@@ -739,6 +739,9 @@
 				position.add( inp_obj, 'air_dot' )
 					.listen()
 					.disable();
+				gui.add( temp_obj, 'render' )
+					.listen()
+					.disable();
 			
 			} );
 
@@ -824,6 +827,7 @@
 				temp_obj.z_pos = twoDecimals(camera.position.z);
 
 				temp_obj.speed = getSpeed();
+				temp_obj.render = deltaTime;
 
 				renderer.render( scene, camera );
 
