@@ -536,11 +536,8 @@
 						playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
 					
 					}
-					if ( direction_vector.x == 0 && direction_vector.y == 0 && direction_vector.z == 0 ) {
 					
-						groundFriction(deltaTime);
-					
-					}
+					groundFriction(deltaTime);
 
 					if ( keyStates[ 'Space' ] ) {
 
