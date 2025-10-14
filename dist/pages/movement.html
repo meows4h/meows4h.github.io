@@ -58,7 +58,10 @@
 			scene.background = new THREE.Color( 0x88ccee );
 			scene.fog = new THREE.Fog( 0x88ccee, 0, 900 );
 
-			const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			let glbl_FoV = 100;
+			let glbl_Near = 0.1;
+			let glbl_Far = 1000;
+			const camera = new THREE.PerspectiveCamera( glbl_FoV, window.innerWidth / window.innerHeight, glbl_Near, glbl_Far );
 			camera.rotation.order = 'YXZ';
 
 			const fillLight1 = new THREE.HemisphereLight( 0x8dc1de, 0x00668d, 1.5 );
@@ -96,9 +99,9 @@
 			stats.domElement.style.top = '0px';
 			container.appendChild( stats.domElement );
 
-		    let glbl_Ground = 20;
-		    let glbl_Air = 3;
-		    let glbl_Const = 10;
+		    	let glbl_Ground = 20;
+		    	let glbl_Air = 3;
+		    	let glbl_Const = 10;
 			let glbl_Jump = 6;
 			let glbl_Friction = 5;
 			let glbl_StopValue = 1;
@@ -110,7 +113,7 @@
 			const NUM_SPHERES = 100;
 			const SPHERE_RADIUS = 0.2;
 
-			const STEPS_PER_FRAME = 30;
+			let STEPS_PER_FRAME = 30;
 
 			const sphereGeometry = new THREE.IcosahedronGeometry( SPHERE_RADIUS, 5 );
 			const sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xdede8d } );
@@ -509,11 +512,6 @@
         		if ( playerOnFloor ) {
 	  				if ( keyStates[ 'KeyW' ] ) {
 	  
-	     		//      let temp_vec = getForwardVector().multiplyScalar( glbl_Ground );
-						// inp_obj.vel_for_x = twoDecimals(temp_vec.x);
-						// inp_obj.vel_for_y = twoDecimals(temp_vec.y);
-						// inp_obj.vel_for_z = twoDecimals(temp_vec.z);
-	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 						direction_vector.add( getForwardVector().multiplyScalar( glbl_Ground ) )
 	  
 	  				}
@@ -626,97 +624,125 @@
 				scene.add( helper );
 				
 				const gui = new GUI( { width: 200 } );
+				const movement = gui.addFolder( 'Movement' );
+				const camera = gui.addFolder( 'Camera' );
+				const position = gui.addFolder( 'Position Data' );
 				gui.add( { debug: false }, 'debug' )
 					.onChange( function ( value ) {
 
 						helper.visible = value;
 
 					} );
-				gui.add( { air: 3 }, 'air', 0, 10 )
+				gui.add( { steps_per: 30 }, 'steps_per', 1, 100 )
+					.onChage ( function ( value ) {
+
+						value = Math.floor(value);
+						STEPS_PER_FRAME = value;
+
+					} );
+				movement.add( { air: 3 }, 'air', 0, 10 )
 					.onChange( function ( value ) {
 						
 						glbl_Air = value;
 						
 					} );
-				gui.add( { ground: 20 }, 'ground', 0, 100 )
+				movement.add( { ground: 20 }, 'ground', 0, 100 )
 					.onChange( function ( value ) {
 						
 						glbl_Ground = value;
 						
 					} );
-				gui.add( { const: 20 }, 'const', 0, 100 )
+				movement.add( { const: 20 }, 'const', 0, 100 )
 					.onChange( function ( value ) {
 						
 						glbl_Const = value;
 						
 					} );
-				gui.add( { jump: 6 }, 'jump', 0, 50 )
+				movement.add( { jump: 6 }, 'jump', 0, 50 )
 					.onChange ( function ( value ) {
 
 						glbl_Jump = value;
 
 					} );
-				gui.add( { gravity: 11 }, 'gravity', -5, 40 )
+				movement.add( { gravity: 11 }, 'gravity', -5, 40 )
 					.onChange ( function ( value ) {
 
 						glbl_Gravity = value;
 
 					} );
-				gui.add( { friction: 5 }, 'friction', -5, 20 )
+				movement.add( { friction: 5 }, 'friction', -5, 20 )
 					.onChange ( function ( value ) {
 
 						glbl_Friction = value;
 
 					} );
-				gui.add( { stop: 1 }, 'stop', 0, 10 )
+				movement.add( { stop: 1 }, 'stop', 0, 50 )
 					.onChange ( function ( value ) {
 
 						glbl_StopValue = value;
 
 					} );
-				gui.add( temp_obj, 'x_vel' )
+				camera.add( { fov: 100 }, 'fov', 5, 150 )
+					.onChange ( function ( value ) {
+
+						glbl_FoV = value;
+
+					} );
+				camera.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
+					.onChange ( function ( value ) {
+
+						glbl_Near = value;
+
+					} );
+				camera.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
+					.onChange ( function ( value ) {
+
+						glbl_Far = value;
+
+					} );
+				position.add( temp_obj, 'x_vel' )
 					.listen()
 					.disable();
-				gui.add( temp_obj, 'y_vel' )
+				position.add( temp_obj, 'y_vel' )
 					.listen()
 					.disable();
-				gui.add( temp_obj, 'z_vel' )
+				position.add( temp_obj, 'z_vel' )
 					.listen()
 					.disable();
-				gui.add( temp_obj, 'x_pos' )
+				position.add( temp_obj, 'x_pos' )
 					.listen()
 					.disable();
-				gui.add( temp_obj, 'y_pos' )
+				position.add( temp_obj, 'y_pos' )
 					.listen()
 					.disable();
-				gui.add( temp_obj, 'z_pos' )
+				position.add( temp_obj, 'z_pos' )
 					.listen()
 					.disable();
-				gui.add( temp_obj, 'speed' )
+				position.add( temp_obj, 'speed' )
 					.listen()
 					.disable();
-				gui.add( inp_obj, 'vel_for_x' )
+				position.add( inp_obj, 'vel_for_x' )
 					.listen()
 					.disable();
-				gui.add( inp_obj, 'vel_for_y' )
+				position.add( inp_obj, 'vel_for_y' )
 					.listen()
 					.disable();
-				gui.add( inp_obj, 'vel_for_z' )
+				position.add( inp_obj, 'vel_for_z' )
 					.listen()
 					.disable();
-				gui.add( inp_obj, 'vel_side_x' )
+				position.add( inp_obj, 'vel_side_x' )
 					.listen()
 					.disable();
-				gui.add( inp_obj, 'vel_side_y' )
+				position.add( inp_obj, 'vel_side_y' )
 					.listen()
 					.disable();
-				gui.add( inp_obj, 'vel_side_z' )
+				position.add( inp_obj, 'vel_side_z' )
 					.listen()
 					.disable();
-				gui.add( inp_obj, 'ground_dot' )
+				position.add( inp_obj, 'ground_dot' )
 					.listen()
 					.disable();
-				gui.add( inp_obj, 'air_dot' )
+				position.add( inp_obj, 'air_dot' )
 					.listen()
 					.disable();
 			
