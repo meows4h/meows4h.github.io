@@ -518,41 +518,32 @@
 	  
 	  				if ( keyStates[ 'KeyS' ] ) {
 	  
-	  			// 		let temp_vec = getForwardVector().multiplyScalar( - glbl_Ground );
-						// inp_obj.vel_for_x = twoDecimals(temp_vec.x);
-						// inp_obj.vel_for_y = twoDecimals(temp_vec.y);
-						// inp_obj.vel_for_z = twoDecimals(temp_vec.z);
-	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 						direction_vector.add( getForwardVector().multiplyScalar( - glbl_Ground ) );
 						
 	  				}
 	  
 	  				if ( keyStates[ 'KeyA' ] ) {
 	  
-	  			// 		let temp_vec = getSideVector().multiplyScalar( - glbl_Ground );
-						// inp_obj.vel_side_x = twoDecimals(temp_vec.x);
-						// inp_obj.vel_side_y = twoDecimals(temp_vec.y);
-						// inp_obj.vel_side_z = twoDecimals(temp_vec.z);
-	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 						direction_vector.add( getSideVector().multiplyScalar( - glbl_Ground ) );
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyD' ] ) {
 	  
-	  			// 		let temp_vec = getSideVector().multiplyScalar( glbl_Ground );
-						// inp_obj.vel_side_x = twoDecimals(temp_vec.x);
-						// inp_obj.vel_side_y = twoDecimals(temp_vec.y);
-						// inp_obj.vel_side_z = twoDecimals(temp_vec.z);
-	  			// 		playerVelocity.add( groundAccelerate(playerVelocity, temp_vec, deltaTime) );
 						direction_vector.add( getSideVector().multiplyScalar( glbl_Ground ) );
 	  
 	  				}
 
 					if ( keyStates[ 'KeyD' ] || keyStates[ 'KeyA' ] || keyStates[ 'KeyW' ] || keyStates[ 'KeyS' ] ) {
+						
 						playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
+					
 					}
-					groundFriction(deltaTime);
+					if ( direction_vector.x == 0 && direction_vector.y == 0 && direction_vector.z == 0 ) {
+					
+						groundFriction(deltaTime);
+					
+					}
 
 					if ( keyStates[ 'Space' ] ) {
 
@@ -686,18 +677,21 @@
 					.onChange ( function ( value ) {
 
 						glbl_FoV = value;
+						camera.updateProjectionMatrix();
 
 					} );
 				camera.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
 					.onChange ( function ( value ) {
 
 						glbl_Near = value;
+						camera.updateProjectionMatrix();
 
 					} );
 				camera.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
 					.onChange ( function ( value ) {
 
 						glbl_Far = value;
+						camera.updateProjectionMatrix();
 
 					} );
 				position.add( temp_obj, 'x_vel' )
@@ -840,21 +834,4 @@
 		</script>
 	</body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
