@@ -37,13 +37,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    # - name: Configure Git User
-    #   run: |
-    #     git --version
-    #       git config user.name 'meows4h'
-    #       git config user.email 'rox.beecher@gmail.com'
-    #       git config user.name
-    #       git config user.email
+    - name: Configure Git User
+      run: |
+        git --version
+          git config user.name 'meows4h'
+          git config user.email 'rox.beecher@gmail.com'
+          git config user.name
+          git config user.email
 
     - name: Install dependencies
       # Using npm ci is generally faster than running npm i because it caches dependencies
