@@ -38,13 +38,10 @@ jobs:
         cache: 'npm'
 
     - name: Configure Git User
-      env:
-        NAME: ${{ secrets.NAME }}
-        EMAIL: ${{ secrets.EMAIL }}
       run: |
         git --version
-          git config user.name $NAME
-          git config user.email $EMAIL
+          git config user.name 'meows4h'
+          git config user.email 'rox.beecher@gmail.com'
           git config user.name
           git config user.email
 
