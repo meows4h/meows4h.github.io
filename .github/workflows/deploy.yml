@@ -27,7 +27,6 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v3
@@ -38,7 +37,6 @@ jobs:
         cache: 'npm'
 
     - name: Install dependencies
-      # Using npm ci is generally faster than running npm i because it caches dependencies
       run: |
         npm ci
 
@@ -48,15 +46,3 @@ jobs:
       env:  
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-    # - name: Setup Pages
-    #   uses: actions/configure-pages@v3
-    # - name: Upload artifact
-    #   uses: actions/upload-pages-artifact@v1
-    #   with:
-    #     # Upload build directory content
-    #     path: 'build/'
-    # - name: Deploy to GitHub Pages
-    #   id: deployment
-    #   uses: actions/deploy-pages@v1
-    #   env:  
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
