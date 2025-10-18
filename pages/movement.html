@@ -96,9 +96,9 @@
 			stats.domElement.style.top = '0px';
 			container.appendChild( stats.domElement );
 
-		    	let glbl_Ground = 20;
-		    	let glbl_Air = 3;
-		    	let glbl_Const = 10;
+			let glbl_Ground = 20;
+			let glbl_Air = 3;
+			let glbl_Const = 10;
 			let glbl_Jump = 6;
 			let glbl_Friction = 5;
 			let glbl_StopValue = 1;
@@ -402,7 +402,7 @@
 			function groundFriction(delta) {
 				let speed = getSpeed();
 				if (speed == 0) {
-					return;
+					return 0;
 				}
 				let control = 0;
 				if (speed < glbl_StopValue) {
@@ -416,7 +416,8 @@
 					new_speed = 0;
 				}
 				new_speed /= speed;
-				playerVelocity.multiplyScalar(new_speed);
+				let friction_vector = new THREE.Vector3(-(playerVelocity.x * new_speed), -(playerVelocity.y * new_speed), -(playerVelocity.z * new_speed));
+				return friction_vector;
 			}
 
 			function twoDecimals(number) {
@@ -531,13 +532,10 @@
 	  
 	  				}
 
-					if ( keyStates[ 'KeyD' ] || keyStates[ 'KeyA' ] || keyStates[ 'KeyW' ] || keyStates[ 'KeyS' ] ) {
-						
-						playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
-					
-					}
-					
-					groundFriction(deltaTime);
+					let movement_vel = groundAccelerate(playerVelocity, direction_vector, deltaTime);
+					let friction_vel = groundFriction(deltaTime);
+					movement_vel.add(friction_vel);
+					playerVelocity.add(movement_vel);
 
 					if ( keyStates[ 'Space' ] ) {
 
@@ -549,31 +547,28 @@
 
          			if ( keyStates[ 'KeyW' ] ) {
   
-	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Ground );
-	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
+	            		direction_vector.add(getForwardVector().multiplyScalar( glbl_Ground ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyS' ] ) {
 	  
-	  					let temp_vec = getForwardVector().multiplyScalar( - glbl_Ground );
-	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
+	  					direction_vector.add(getForwardVector().multiplyScalar( - glbl_Ground ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyA' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( - glbl_Ground );
-	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
+	  					direction_vector.add(getSideVector().multiplyScalar( - glbl_Ground ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyD' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( glbl_Ground );
-	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
+	  					direction_vector.add(getSideVector().multiplyScalar( glbl_Ground ));
 	  
 	  				}
+					playerVelocity.add( airAccelerate(playerVelocity, direction_vector, deltaTime) );
           
         }
 
@@ -832,4 +827,5 @@
 		</script>
 	</body>
 </html>
+
 
