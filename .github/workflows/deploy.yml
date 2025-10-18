@@ -36,6 +36,15 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - name: Configure Git User
+      env:
+        NAME: ${{ secrets.NAME }}
+        EMAIL: ${{ secrets.EMAIL }}
+      run: |
+        git config --global user.email $EMAIL
+        git config --global user.name $NAME
+
     - name: Install dependencies
       # Using npm ci is generally faster than running npm i because it caches dependencies
       run: |
@@ -43,6 +52,8 @@ jobs:
     - name: Deploy command
       run: |
         npm run deploy
+      env:  
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     # - name: Setup Pages
     #   uses: actions/configure-pages@v3
