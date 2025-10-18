@@ -42,13 +42,17 @@ jobs:
         NAME: ${{ secrets.NAME }}
         EMAIL: ${{ secrets.EMAIL }}
       run: |
-        git config --global user.email $EMAIL
-        git config --global user.name $NAME
+        git --version
+          git config user.name $NAME
+          git config user.email $EMAIL
+          git config user.name
+          git config user.email
 
     - name: Install dependencies
       # Using npm ci is generally faster than running npm i because it caches dependencies
       run: |
         npm ci
+
     - name: Deploy command
       run: |
         npm run deploy
