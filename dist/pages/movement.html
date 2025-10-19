@@ -416,6 +416,7 @@
 					new_speed = 0;
 				}
 				new_speed /= speed;
+				console.log(new_speed, speed);
 				const friction_vector = new THREE.Vector3(-(playerVelocity.x * new_speed), -(playerVelocity.y * new_speed), -(playerVelocity.z * new_speed));
 				return friction_vector;
 			}
@@ -536,6 +537,7 @@
 					const friction_vel = groundFriction(deltaTime);
 					movement_vel.add(friction_vel);
 					playerVelocity.add(movement_vel);
+					console.log(movement_vel.values, playerVelocity.values);
 
 					if ( keyStates[ 'Space' ] ) {
 
@@ -827,6 +829,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
