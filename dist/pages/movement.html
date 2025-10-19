@@ -25,7 +25,6 @@
 		</style>
 	</head>
 	<body>
-    <!--<div id="location" style="color: red; position: fixed; left: 5px; text-align: left;">waiting...</div>-->
 	<div id="container"></div>
 
 		<script type="importmap">
@@ -533,11 +532,12 @@
 	  
 	  				}
 
+					direction_vector = direction_vector.setLength( glbl_Ground );
 					const movement_vel = groundAccelerate(playerVelocity, direction_vector, deltaTime);
 					const friction_vel = groundFriction(deltaTime);
 					movement_vel.add(friction_vel);
 					playerVelocity.add(movement_vel);
-					console.log(movement_vel.values, playerVelocity.values);
+					console.log("GROUND ", movement_vel.x, movement_vel.y, movement_vel.z, playerVelocity.x, playerVelocity.y, playerVelocity.z);
 
 					if ( keyStates[ 'Space' ] ) {
 
@@ -549,28 +549,31 @@
 
          			if ( keyStates[ 'KeyW' ] ) {
   
-	            		direction_vector.add(getForwardVector().multiplyScalar( glbl_Ground ));
+	            		direction_vector.add(getForwardVector().multiplyScalar( glbl_Air ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyS' ] ) {
 	  
-	  					direction_vector.add(getForwardVector().multiplyScalar( - glbl_Ground ));
+	  					direction_vector.add(getForwardVector().multiplyScalar( - glbl_Air ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyA' ] ) {
 	  
-	  					direction_vector.add(getSideVector().multiplyScalar( - glbl_Ground ));
+	  					direction_vector.add(getSideVector().multiplyScalar( - glbl_Air ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyD' ] ) {
 	  
-	  					direction_vector.add(getSideVector().multiplyScalar( glbl_Ground ));
+	  					direction_vector.add(getSideVector().multiplyScalar( glbl_Air ));
 	  
 	  				}
-					playerVelocity.add( airAccelerate(playerVelocity, direction_vector, deltaTime) );
+					direction_vector = direction_vector.setLength( glbl_Air );
+					const air_vel = airAccelerate(playerVelocity, direction_vector, deltaTime);
+					playerVelocity.add( air_vel );
+					console.log("AIR ", air_vel.x, air_vel.y, air_vel.z, air_vel.x, playerVelocity.y, playerVelocity.z);
           
         }
 
@@ -829,6 +832,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
