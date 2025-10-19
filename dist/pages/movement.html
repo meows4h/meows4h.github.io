@@ -538,10 +538,10 @@
 					const movement_vel = groundAccelerate(playerVelocity, direction_vector, deltaTime);
 					const friction_vel = groundFriction(deltaTime);
 					
-					if (glbl_FrameCheck >= STEPS_PER_FRAME * glbl_FrictionRule) {
+					if (glbl_FrameCheck >= glbl_FrictionRule) {
 						movement_vel.add(friction_vel);
 					} else {
-						glbl_FrameCheck += 1;
+						glbl_FrameCheck += deltaTime;
 					}
 					
 					playerVelocity.add(movement_vel);
@@ -669,7 +669,7 @@
 						glbl_Friction = value;
 
 					} );
-				movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 10 )
+				movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 1 )
 					.onChange ( function ( value ) {
 						
 						glbl_FrictionRule = value;
@@ -846,6 +846,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
