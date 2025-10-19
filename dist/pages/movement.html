@@ -105,7 +105,7 @@
 			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0, ground_dot: 0, air_dot: 0 };
 
 			let glbl_FrameCheck = 0;
-			let glbl_FrictionRule = 2;
+			let glbl_FrictionRule = 0.05;
 			let glbl_Gravity = 11;
 
 			const NUM_SPHERES = 100;
@@ -669,7 +669,7 @@
 						glbl_Friction = value;
 
 					} );
-				movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 1 )
+				movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 0.1 )
 					.onChange ( function ( value ) {
 						
 						glbl_FrictionRule = value;
@@ -846,6 +846,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
