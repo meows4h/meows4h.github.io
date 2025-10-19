@@ -532,7 +532,7 @@
 	  
 	  				}
 
-					direction_vector = direction_vector.setLength( glbl_Ground );
+					direction_vector.setLength( glbl_Ground );
 					const movement_vel = groundAccelerate(playerVelocity, direction_vector, deltaTime);
 					const friction_vel = groundFriction(deltaTime);
 					movement_vel.add(friction_vel);
@@ -570,7 +570,7 @@
 	  					direction_vector.add(getSideVector().multiplyScalar( glbl_Air ));
 	  
 	  				}
-					direction_vector = direction_vector.setLength( glbl_Air );
+					direction_vector.setLength( glbl_Air );
 					const air_vel = airAccelerate(playerVelocity, direction_vector, deltaTime);
 					playerVelocity.add( air_vel );
 					console.log("AIR ", air_vel.x, air_vel.y, air_vel.z, air_vel.x, playerVelocity.y, playerVelocity.z);
@@ -832,6 +832,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
