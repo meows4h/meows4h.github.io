@@ -400,8 +400,8 @@
 
 			function groundFriction(delta) {
 				let speed = getSpeed();
-				if (speed <= 0.001) {
-					return 0;
+				if (speed <= 0) {
+					return new THREE.Vector3();
 				}
 				let control = 0;
 				if (speed < glbl_StopValue) {
@@ -537,7 +537,6 @@
 					const friction_vel = groundFriction(deltaTime);
 					movement_vel.add(friction_vel);
 					playerVelocity.add(movement_vel);
-					console.log("GROUND ", movement_vel.x, movement_vel.y, movement_vel.z, playerVelocity.x, playerVelocity.y, playerVelocity.z);
 
 					if ( keyStates[ 'Space' ] ) {
 
@@ -573,7 +572,6 @@
 					direction_vector.setLength( glbl_Air );
 					const air_vel = airAccelerate(playerVelocity, direction_vector, deltaTime);
 					playerVelocity.add( air_vel );
-					console.log("AIR ", air_vel.x, air_vel.y, air_vel.z, air_vel.x, playerVelocity.y, playerVelocity.z);
           
         }
 
@@ -832,6 +830,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
