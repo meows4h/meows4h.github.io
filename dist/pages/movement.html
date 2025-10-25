@@ -592,28 +592,39 @@
 			const loader = new GLTFLoader().setPath( './models/' );
 			// https://discourse.threejs.org/t/how-to-dispose-and-destroy-gltf-object-completely/24761/2
 			// https://threejs.org/docs/#examples/en/loaders/GLTFLoader
-			loader.load( 'collision-world.glb', ( gltf ) => {
+			function level_load() {
+				loader.load( level_obj.level, ( gltf ) => {
 
-				scene.add( gltf.scene );
-
-				worldOctree.fromGraphNode( gltf.scene );
-
-				gltf.scene.traverse( child => {
-
-					if ( child.isMesh ) {
-
-						child.castShadow = true;
-						child.receiveShadow = true;
-
-						if ( child.material.map ) {
-
-							child.material.map.anisotropy = 4;
-
+					scene.add( gltf.scene );
+	
+					worldOctree.fromGraphNode( gltf.scene );
+	
+					gltf.scene.traverse( child => {
+	
+						if ( child.isMesh ) {
+	
+							child.castShadow = true;
+							child.receiveShadow = true;
+	
+							if ( child.material.map ) {
+								child.material.map.anisotropy = 4;
+							}
 						}
-
-					}
-
 				} );
+			}
+
+			level_load();
+
+			function level_unload() {
+				loader.scene.traverse( function (obj) {
+					if (obj instanceof THREE.Mesh) {
+						obj.geometry.dispose();
+						obj.material.dispose();
+						//loader.scene.remove(obj);
+					}
+				});
+				scene.remove(loader.scene);
+			}
 
 				const helper = new OctreeHelper( worldOctree );
 				helper.visible = false;
@@ -753,7 +764,14 @@
 				gui.add( temp_obj, 'render' )
 					.listen()
 					.disable();
-				gui.add( level_obj, 'level', { Test: 'collision-world.glb', Dust2: 'de_dust2.glb', City: 'rp_city.glb', Mirage: 'mirage_minecraft.glb'}
+				gui.add( level_obj, 'level', { Test: 'collision-world.glb', Dust2: 'de_dust2.glb', City: 'rp_city.glb', Mirage: 'mirage_minecraft.glb'} )
+					.onChange( function ( value ) {
+
+						level_unload();
+						level_obj.level = value;
+						level_load();
+
+					} );
 			
 			} );
 
@@ -850,6 +868,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
