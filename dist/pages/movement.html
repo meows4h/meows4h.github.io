@@ -590,8 +590,6 @@
 			}
 
 			const loader = new GLTFLoader().setPath( './models/' );
-			// https://discourse.threejs.org/t/how-to-dispose-and-destroy-gltf-object-completely/24761/2
-			// https://threejs.org/docs/#examples/en/loaders/GLTFLoader
 			function level_load() {
 				loader.load( level_obj.level, ( gltf ) => {
 
@@ -610,6 +608,7 @@
 								child.material.map.anisotropy = 4;
 							}
 						}
+					} );
 				} );
 			}
 
@@ -868,6 +867,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
