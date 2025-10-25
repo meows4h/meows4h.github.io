@@ -25,7 +25,6 @@
 		</style>
 	</head>
 	<body>
-    <!--<div id="location" style="color: red; position: fixed; left: 5px; text-align: left;">waiting...</div>-->
 	<div id="container"></div>
 
 		<script type="importmap">
@@ -96,15 +95,17 @@
 			stats.domElement.style.top = '0px';
 			container.appendChild( stats.domElement );
 
-		    	let glbl_Ground = 20;
-		    	let glbl_Air = 3;
-		    	let glbl_Const = 10;
+			let glbl_Ground = 20;
+			let glbl_Air = 3;
+			let glbl_Const = 10;
 			let glbl_Jump = 6;
 			let glbl_Friction = 5;
 			let glbl_StopValue = 1;
 			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0, render: 0 };
 			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0, ground_dot: 0, air_dot: 0 };
-      
+
+			let glbl_FrameCheck = 0;
+			let glbl_FrictionRule = 0.05;
 			let glbl_Gravity = 11;
 
 			const NUM_SPHERES = 100;
@@ -401,8 +402,8 @@
 
 			function groundFriction(delta) {
 				let speed = getSpeed();
-				if (speed == 0) {
-					return;
+				if (speed <= 0) {
+					return new THREE.Vector3();
 				}
 				let control = 0;
 				if (speed < glbl_StopValue) {
@@ -416,7 +417,9 @@
 					new_speed = 0;
 				}
 				new_speed /= speed;
-				playerVelocity.multiplyScalar(new_speed);
+				console.log(new_speed, speed);
+				const friction_vector = new THREE.Vector3(-(playerVelocity.x * new_speed), -(playerVelocity.y * new_speed), -(playerVelocity.z * new_speed));
+				return friction_vector;
 			}
 
 			function twoDecimals(number) {
@@ -494,7 +497,7 @@
 
 			function controls( deltaTime ) {
 
-				let direction_vector = new THREE.Vector3();
+				const direction_vector = new THREE.Vector3();
 
 				if ( keyStates[ 'KeyR' ] ) {
 					playerVelocity.x = 0;
@@ -531,13 +534,17 @@
 	  
 	  				}
 
-					if ( keyStates[ 'KeyD' ] || keyStates[ 'KeyA' ] || keyStates[ 'KeyW' ] || keyStates[ 'KeyS' ] ) {
-						
-						playerVelocity.add( groundAccelerate(playerVelocity, direction_vector, deltaTime) );
+					direction_vector.setLength( glbl_Ground );
+					const movement_vel = groundAccelerate(playerVelocity, direction_vector, deltaTime);
+					const friction_vel = groundFriction(deltaTime);
 					
+					if (glbl_FrameCheck >= glbl_FrictionRule) {
+						movement_vel.add(friction_vel);
+					} else {
+						glbl_FrameCheck += deltaTime;
 					}
 					
-					groundFriction(deltaTime);
+					playerVelocity.add(movement_vel);
 
 					if ( keyStates[ 'Space' ] ) {
 
@@ -547,33 +554,34 @@
 
 				} else {
 
+					glbl_FrameCheck = 0;
+					
          			if ( keyStates[ 'KeyW' ] ) {
   
-	            		let temp_vec = getForwardVector().multiplyScalar( glbl_Ground );
-	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
+	            		direction_vector.add(getForwardVector().multiplyScalar( glbl_Air ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyS' ] ) {
 	  
-	  					let temp_vec = getForwardVector().multiplyScalar( - glbl_Ground );
-	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
+	  					direction_vector.add(getForwardVector().multiplyScalar( - glbl_Air ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyA' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( - glbl_Ground );
-	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
+	  					direction_vector.add(getSideVector().multiplyScalar( - glbl_Air ));
 	  
 	  				}
 	  
 	  				if ( keyStates[ 'KeyD' ] ) {
 	  
-	  					let temp_vec = getSideVector().multiplyScalar( glbl_Ground );
-	  					playerVelocity.add( airAccelerate(playerVelocity, temp_vec, deltaTime) );
+	  					direction_vector.add(getSideVector().multiplyScalar( glbl_Air ));
 	  
 	  				}
+					direction_vector.setLength( glbl_Air );
+					const air_vel = airAccelerate(playerVelocity, direction_vector, deltaTime);
+					playerVelocity.add( air_vel );
           
         }
 
@@ -659,6 +667,12 @@
 					.onChange ( function ( value ) {
 
 						glbl_Friction = value;
+
+					} );
+				movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 0.1 )
+					.onChange ( function ( value ) {
+						
+						glbl_FrictionRule = value;
 
 					} );
 				movement.add( { stop: 1 }, 'stop', 0, 50 )
@@ -832,4 +846,13 @@
 		</script>
 	</body>
 </html>
+
+
+
+
+
+
+
+
+
 
