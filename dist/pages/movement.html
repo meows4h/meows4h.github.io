@@ -657,7 +657,9 @@
 			}
 			
 			function level_unload() {
-			  console.log(`unloading ${level_obj.level}`);
+			// fwiw it MAY be worth revisting this later bc this log was bugged
+				// it might be unloading other things idk. will see
+			  console.log(`unloading current level`);
 			  if (level_obj.level_scene) {
 				disposeHierarchy(level_obj.level_scene);
 				scene.remove(level_obj.level_scene);
@@ -920,6 +922,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
