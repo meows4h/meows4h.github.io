@@ -407,8 +407,8 @@
 			function groundFriction(delta) {
 				let speed = getSpeed();
 				if (speed <= 0) {
-					playerVelocity.x = 0;
-					playerVelocity.z = 0;
+					// playerVelocity.x = 0;
+					// playerVelocity.z = 0;
 					return new THREE.Vector3();
 				}
 				let control = 0;
@@ -875,11 +875,11 @@
 
 				for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
 
+					controls( deltaTime );
+					
 					updatePlayer( deltaTime );
 
 					updateSpheres( deltaTime );
-
-					controls( deltaTime );
 
 					// teleportPlayerIfOob();
 
@@ -894,7 +894,7 @@
 				temp_obj.z_pos = twoDecimals(camera.position.z);
 
 				temp_obj.speed = getSpeed();
-				temp_obj.render = clock.getDelta();
+				temp_obj.render = deltaTime;
 
 				renderer.render( scene, camera );
 
@@ -905,24 +905,5 @@
 		</script>
 	</body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
