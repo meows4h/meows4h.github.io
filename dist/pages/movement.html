@@ -592,7 +592,7 @@
 			const loader = new GLTFLoader().setPath( './models/' );
 			function level_load() {
 				console.log(`loading ${level_obj.level}`);
-				loader.load( `${level_obj.level}`, ( gltf ) => {
+				loader.load( 'collision-world.glb', ( gltf ) => {
 
 					scene.add( gltf.scene );
 	
@@ -867,6 +867,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
