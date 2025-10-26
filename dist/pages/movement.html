@@ -675,13 +675,13 @@
 			
 			const gui = new GUI( { width: 200 } );
 			const movement = gui.addFolder( 'Movement' );
-			movement.collapsed = true;
+			movement.open( false );
 			const camera_set = gui.addFolder( 'Camera' );
-			camera_set.collapsed = true;
+			camera_set.open( false );
 			const position = gui.addFolder( 'Position Data' );
-			position.collapsed = true;
+			position.open( false );
 			const teleport = gui.addFolder( 'Teleport Debug' );
-			teleport.collapsed = true;
+			teleport.open( false );
 			gui.add( { debug: false }, 'debug' )
 				.onChange( function ( value ) {
 
@@ -920,6 +920,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
