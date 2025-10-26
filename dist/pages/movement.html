@@ -507,9 +507,7 @@
 				const direction_vector = new THREE.Vector3();
 
 				if ( keyStates[ 'KeyR' ] ) {
-					playerVelocity.x = 0;
-					playerVelocity.y = 0;
-					playerVelocity.z = 0;
+					resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
 				}
 
 				if ( keyStates [ 'KeyP' ] ) {
@@ -864,6 +862,11 @@
 				playerCollider.radius = 0.35;
 				camera.position.copy( playerCollider.end );
 				camera.rotation.set( 0, 0, 0 );
+
+				playerVelocity.x = 0;
+				playerVelocity.y = 0;
+				playerVelocity.z = 0;
+				
 				
 			}
 
@@ -906,6 +909,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
