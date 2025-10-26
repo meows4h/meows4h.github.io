@@ -423,8 +423,11 @@
 					new_speed = 0;
 				}
 				new_speed /= speed;
+				if (new_speed != 0) {
+					new_speed = ( 1 / new_speed );
+				}
 				console.log(new_speed, speed);
-				const friction_vector = new THREE.Vector3(-(playerVelocity.x / new_speed), -(playerVelocity.y / new_speed), -(playerVelocity.z / new_speed));
+				const friction_vector = new THREE.Vector3(-(playerVelocity.x * new_speed), -(playerVelocity.y * new_speed), -(playerVelocity.z * new_speed));
 				return friction_vector;
 			}
 
@@ -905,5 +908,6 @@
 		</script>
 	</body>
 </html>
+
 
 
