@@ -617,162 +617,194 @@
 
 			level_load();
 
+			function disposeHierarchy(node) {
+			  if (node.geometry) {
+				node.geometry.dispose();
+			  }
+			
+			  if (node.material) {
+				if (Array.isArray(node.material)) {
+				  for (const material of node.material) {
+					disposeMaterial(material);
+				  }
+				} else {
+				  disposeMaterial(node.material);
+				}
+			  }
+			  for (const child of node.children) {
+				disposeHierarchy(child);
+			  }
+			}
+			
+			function disposeMaterial(material) {
+			  for (const key of Object.keys(material)) {
+				const value = material[key];
+				if (value && typeof value.dispose === 'function') {
+				  value.dispose();
+				}
+			  }
+			  material.dispose();
+			}
+			
 			function level_unload() {
-				console.log(`unloading ${level_obj.level}`);
-				if (level_obj.level_scene) {
-			        scene.remove(level_obj.level_scene);
-			        disposeHierarchy(level_obj.level_scene);
-			        currentLevel = null;
-			    }
-			    worldOctree.clear();
+			  console.log(`unloading ${level_obj.level}`);
+			  if (level_obj.level_scene) {
+				disposeHierarchy(level_obj.level_scene);
+				scene.remove(level_obj.level_scene);
+				level_obj.level_scene = null;
+			  }
+			  
+			  if (worldOctree) {
+				worldOctree.clear();
+			  }
 			}
 
-				const helper = new OctreeHelper( worldOctree );
-				helper.visible = false;
-				scene.add( helper );
-				
-				const gui = new GUI( { width: 200 } );
-				const movement = gui.addFolder( 'Movement' );
-				const camera_set = gui.addFolder( 'Camera' );
-				const position = gui.addFolder( 'Position Data' );
-				gui.add( { debug: false }, 'debug' )
-					.onChange( function ( value ) {
+			const helper = new OctreeHelper( worldOctree );
+			helper.visible = false;
+			scene.add( helper );
+			
+			const gui = new GUI( { width: 200 } );
+			const movement = gui.addFolder( 'Movement' );
+			const camera_set = gui.addFolder( 'Camera' );
+			const position = gui.addFolder( 'Position Data' );
+			gui.add( { debug: false }, 'debug' )
+				.onChange( function ( value ) {
 
-						helper.visible = value;
+					helper.visible = value;
 
-					} );
-				gui.add( { steps_per: 30 }, 'steps_per', 1, 100 )
-					.onChange ( function ( value ) {
+				} );
+			gui.add( { steps_per: 30 }, 'steps_per', 1, 100 )
+				.onChange ( function ( value ) {
 
-						value = Math.floor(value);
-						STEPS_PER_FRAME = value;
+					value = Math.floor(value);
+					STEPS_PER_FRAME = value;
 
-					} );
-				movement.add( { air: 3 }, 'air', 0, 10 )
-					.onChange( function ( value ) {
-						
-						glbl_Air = value;
-						
-					} );
-				movement.add( { ground: 20 }, 'ground', 0, 100 )
-					.onChange( function ( value ) {
-						
-						glbl_Ground = value;
-						
-					} );
-				movement.add( { const: 20 }, 'const', 0, 100 )
-					.onChange( function ( value ) {
-						
-						glbl_Const = value;
-						
-					} );
-				movement.add( { jump: 6 }, 'jump', 0, 50 )
-					.onChange ( function ( value ) {
+				} );
+			movement.add( { air: 3 }, 'air', 0, 10 )
+				.onChange( function ( value ) {
+					
+					glbl_Air = value;
+					
+				} );
+			movement.add( { ground: 20 }, 'ground', 0, 100 )
+				.onChange( function ( value ) {
+					
+					glbl_Ground = value;
+					
+				} );
+			movement.add( { const: 20 }, 'const', 0, 100 )
+				.onChange( function ( value ) {
+					
+					glbl_Const = value;
+					
+				} );
+			movement.add( { jump: 6 }, 'jump', 0, 50 )
+				.onChange ( function ( value ) {
 
-						glbl_Jump = value;
+					glbl_Jump = value;
 
-					} );
-				movement.add( { gravity: 11 }, 'gravity', -5, 40 )
-					.onChange ( function ( value ) {
+				} );
+			movement.add( { gravity: 11 }, 'gravity', -5, 40 )
+				.onChange ( function ( value ) {
 
-						glbl_Gravity = value;
+					glbl_Gravity = value;
 
-					} );
-				movement.add( { friction: 5 }, 'friction', -5, 20 )
-					.onChange ( function ( value ) {
+				} );
+			movement.add( { friction: 5 }, 'friction', -5, 20 )
+				.onChange ( function ( value ) {
 
-						glbl_Friction = value;
+					glbl_Friction = value;
 
-					} );
-				movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 0.1 )
-					.onChange ( function ( value ) {
-						
-						glbl_FrictionRule = value;
+				} );
+			movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 0.1 )
+				.onChange ( function ( value ) {
+					
+					glbl_FrictionRule = value;
 
-					} );
-				movement.add( { stop: 1 }, 'stop', 0, 50 )
-					.onChange ( function ( value ) {
+				} );
+			movement.add( { stop: 1 }, 'stop', 0, 50 )
+				.onChange ( function ( value ) {
 
-						glbl_StopValue = value;
+					glbl_StopValue = value;
 
-					} );
-				camera_set.add( { fov: 100 }, 'fov', 5, 150 )
-					.onChange ( function ( value ) {
+				} );
+			camera_set.add( { fov: 100 }, 'fov', 5, 150 )
+				.onChange ( function ( value ) {
 
-						camera.fov = value;
-						camera.updateProjectionMatrix();
+					camera.fov = value;
+					camera.updateProjectionMatrix();
 
-					} );
-				camera_set.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
-					.onChange ( function ( value ) {
+				} );
+			camera_set.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
+				.onChange ( function ( value ) {
 
-						camera.near = value;
-						camera.updateProjectionMatrix();
+					camera.near = value;
+					camera.updateProjectionMatrix();
 
-					} );
-				camera_set.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
-					.onChange ( function ( value ) {
+				} );
+			camera_set.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
+				.onChange ( function ( value ) {
 
-						camera.far = value;
-						camera.updateProjectionMatrix();
+					camera.far = value;
+					camera.updateProjectionMatrix();
 
-					} );
-				position.add( temp_obj, 'x_vel' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'y_vel' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'z_vel' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'x_pos' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'y_pos' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'z_pos' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'speed' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_for_x' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_for_y' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_for_z' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_side_x' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_side_y' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_side_z' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'ground_dot' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'air_dot' )
-					.listen()
-					.disable();
-				gui.add( temp_obj, 'render' )
-					.listen()
-					.disable();
-				gui.add( level_obj, 'level', { Test: 'collision-world.glb', Dust2: 'de_dust2.glb', City: 'rp_city.glb', Mirage: 'mirage_minecraft.glb'} )
-					.onChange( function ( value ) {
+				} );
+			position.add( temp_obj, 'x_vel' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'y_vel' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'z_vel' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'x_pos' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'y_pos' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'z_pos' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'speed' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_for_x' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_for_y' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_for_z' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_side_x' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_side_y' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_side_z' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'ground_dot' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'air_dot' )
+				.listen()
+				.disable();
+			gui.add( temp_obj, 'render' )
+				.listen()
+				.disable();
+			gui.add( level_obj, 'level', { Test: 'collision-world.glb', Dust2: 'de_dust2.glb', City: 'rp_city.glb', Mirage: 'mirage_minecraft.glb'} )
+				.onChange( function ( value ) {
 
-						level_unload();
-						level_obj.level = value;
-						level_load();
+					level_unload();
+					level_obj.level = value;
+					level_load();
 
-					} );
+				} );
 
 			function teleportPlayerIfOob() {
 
@@ -827,6 +859,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
