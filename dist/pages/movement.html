@@ -441,7 +441,7 @@
 			}
 
 			function getSpeed() {
-				return twoDecimals(getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z)));
+				return getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z);
 			}
 
       		function groundAccelerate(inp_velocity, wish_direction, delta) {
@@ -908,7 +908,7 @@
 				temp_obj.y_pos = twoDecimals(camera.position.y);
 				temp_obj.z_pos = twoDecimals(camera.position.z);
 
-				temp_obj.speed = getSpeed();
+				temp_obj.speed = twoDecimals(getSpeed());
 				temp_obj.render = deltaTime;
 
 				renderer.render( scene, camera );
@@ -920,6 +920,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
