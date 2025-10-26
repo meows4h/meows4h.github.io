@@ -424,7 +424,14 @@
 				}
 				new_speed /= speed;
 				new_speed = 1 - new_speed;
-				console.log(new_speed, speed);
+				if (new_speed <= 0) {
+					playerVelocity.x = 0;
+					playerVelocity.y = 0;
+					playerVelocity.z = 0;
+					new_speed = 0;
+				}
+					
+				// console.log(new_speed, speed);
 				const friction_vector = new THREE.Vector3(-(playerVelocity.x * new_speed), -(playerVelocity.y * new_speed), -(playerVelocity.z * new_speed));
 				return friction_vector;
 			}
@@ -668,9 +675,13 @@
 			
 			const gui = new GUI( { width: 200 } );
 			const movement = gui.addFolder( 'Movement' );
+			movement.collapsed = true;
 			const camera_set = gui.addFolder( 'Camera' );
+			camera_set.collapsed = true;
 			const position = gui.addFolder( 'Position Data' );
+			position.collapsed = true;
 			const teleport = gui.addFolder( 'Teleport Debug' );
+			teleport.collapsed = true;
 			gui.add( { debug: false }, 'debug' )
 				.onChange( function ( value ) {
 
@@ -741,7 +752,7 @@
 					glbl_Friction = value;
 
 				} );
-			movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 0.1 )
+			movement.add ( { fric_rule: 0.05 }, 'fric_rule', 0, 0.1 )
 				.onChange ( function ( value ) {
 					
 					glbl_FrictionRule = value;
@@ -909,6 +920,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
