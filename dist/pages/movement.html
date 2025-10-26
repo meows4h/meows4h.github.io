@@ -881,7 +881,7 @@
 
 				}
 
-				controls( deltaTime );
+				controls( clock.getDelta() );
 
 				temp_obj.x_vel = twoDecimals(playerVelocity.x);
 				temp_obj.y_vel = twoDecimals(playerVelocity.y);
@@ -903,6 +903,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
