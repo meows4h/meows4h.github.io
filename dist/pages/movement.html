@@ -407,6 +407,8 @@
 			function groundFriction(delta) {
 				let speed = getSpeed();
 				if (speed <= 0) {
+					playerVelocity.x = 0;
+					playerVelocity.z = 0;
 					return new THREE.Vector3();
 				}
 				let control = 0;
@@ -422,7 +424,7 @@
 				}
 				new_speed /= speed;
 				console.log(new_speed, speed);
-				const friction_vector = new THREE.Vector3(-(playerVelocity.x * new_speed), -(playerVelocity.y * new_speed), -(playerVelocity.z * new_speed));
+				const friction_vector = new THREE.Vector3(-(playerVelocity.x / new_speed), -(playerVelocity.y / new_speed), -(playerVelocity.z / new_speed));
 				return friction_vector;
 			}
 
@@ -877,11 +879,11 @@
 
 					updateSpheres( deltaTime );
 
+					controls( deltaTime );
+
 					// teleportPlayerIfOob();
 
 				}
-
-				controls( clock.getDelta() );
 
 				temp_obj.x_vel = twoDecimals(playerVelocity.x);
 				temp_obj.y_vel = twoDecimals(playerVelocity.y);
@@ -903,6 +905,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
