@@ -591,7 +591,8 @@
 
 			const loader = new GLTFLoader().setPath( './models/' );
 			function level_load() {
-				loader.load( level_obj.level, ( gltf ) => {
+				console.log(`loading ${level_obj.level}`);
+				loader.load( `${level_obj.level}`, ( gltf ) => {
 
 					scene.add( gltf.scene );
 	
@@ -615,6 +616,7 @@
 			level_load();
 
 			function level_unload() {
+				console.log(`unloading ${level_obj.level}`);
 				loader.scene.traverse( function (obj) {
 					if (obj instanceof THREE.Mesh) {
 						obj.geometry.dispose();
@@ -865,6 +867,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
