@@ -101,12 +101,16 @@
 			let glbl_Jump = 6;
 			let glbl_Friction = 5;
 			let glbl_StopValue = 1;
+			let glbl_PlayerHeight = 0.6;
 			const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0, render: 0 };
 			const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0, ground_dot: 0, air_dot: 0 };
+			const tele_obj = { tele_x: 0, tele_y: 1, tele_z: 0 };
 
 			let glbl_FrameCheck = 0;
 			let glbl_FrictionRule = 0.05;
 			let glbl_Gravity = 11;
+
+			const level_obj = { level: 'collision-world.glb', level_scene: null };
 
 			const NUM_SPHERES = 100;
 			const SPHERE_RADIUS = 0.2;
@@ -403,6 +407,8 @@
 			function groundFriction(delta) {
 				let speed = getSpeed();
 				if (speed <= 0) {
+					// playerVelocity.x = 0;
+					// playerVelocity.z = 0;
 					return new THREE.Vector3();
 				}
 				let control = 0;
@@ -417,7 +423,15 @@
 					new_speed = 0;
 				}
 				new_speed /= speed;
-				console.log(new_speed, speed);
+				new_speed = 1 - new_speed;
+				if (new_speed <= 0) {
+					playerVelocity.x = 0;
+					playerVelocity.y = 0;
+					playerVelocity.z = 0;
+					new_speed = 0;
+				}
+					
+				// console.log(new_speed, speed);
 				const friction_vector = new THREE.Vector3(-(playerVelocity.x * new_speed), -(playerVelocity.y * new_speed), -(playerVelocity.z * new_speed));
 				return friction_vector;
 			}
@@ -427,7 +441,7 @@
 			}
 
 			function getSpeed() {
-				return twoDecimals(getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z)));
+				return getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z));
 			}
 
       		function groundAccelerate(inp_velocity, wish_direction, delta) {
@@ -500,9 +514,7 @@
 				const direction_vector = new THREE.Vector3();
 
 				if ( keyStates[ 'KeyR' ] ) {
-					playerVelocity.x = 0;
-					playerVelocity.y = 0;
-					playerVelocity.z = 0;
+					resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
 				}
 
 				if ( keyStates [ 'KeyP' ] ) {
@@ -588,174 +600,260 @@
 			}
 
 			const loader = new GLTFLoader().setPath( './models/' );
+			function level_load() {
+				console.log(`loading ${level_obj.level}`);
+				loader.load( `${level_obj.level}`, ( gltf ) => {
 
-			loader.load( 'collision-world.glb', ( gltf ) => {
-
-				scene.add( gltf.scene );
-
-				worldOctree.fromGraphNode( gltf.scene );
-
-				gltf.scene.traverse( child => {
-
-					if ( child.isMesh ) {
-
-						child.castShadow = true;
-						child.receiveShadow = true;
-
-						if ( child.material.map ) {
-
-							child.material.map.anisotropy = 4;
-
+					level_obj.level_scene = gltf.scene;
+					level_obj.level_scene.name = 'LoadedLevel';
+					scene.add( level_obj.level_scene );
+	
+					worldOctree.fromGraphNode( level_obj.level_scene );
+	
+					level_obj.level_scene.traverse( child => {
+	
+						if ( child.isMesh ) {
+	
+							child.castShadow = true;
+							child.receiveShadow = true;
+	
+							if ( child.material.map ) {
+								child.material.map.anisotropy = 4;
+							}
 						}
+					} );
+				} );
+			}
 
-					}
+			level_load();
+
+			function disposeHierarchy(node) {
+			  if (node.geometry) {
+				node.geometry.dispose();
+			  }
+			
+			  if (node.material) {
+				if (Array.isArray(node.material)) {
+				  for (const material of node.material) {
+					disposeMaterial(material);
+				  }
+				} else {
+				  disposeMaterial(node.material);
+				}
+			  }
+			  for (const child of node.children) {
+				disposeHierarchy(child);
+			  }
+			}
+			
+			function disposeMaterial(material) {
+			  for (const key of Object.keys(material)) {
+				const value = material[key];
+				if (value && typeof value.dispose === 'function') {
+				  value.dispose();
+				}
+			  }
+			  material.dispose();
+			}
+			
+			function level_unload() {
+			// fwiw it MAY be worth revisting this later bc this log was bugged
+				// it might be unloading other things idk. will see
+			  console.log(`unloading current level`);
+			  if (level_obj.level_scene) {
+				disposeHierarchy(level_obj.level_scene);
+				scene.remove(level_obj.level_scene);
+				level_obj.level_scene = null;
+			  }
+			  
+			  if (worldOctree) {
+				worldOctree.clear();
+			  }
+			}
+
+			const helper = new OctreeHelper( worldOctree );
+			helper.visible = false;
+			scene.add( helper );
+			
+			const gui = new GUI( { width: 200 } );
+			const movement = gui.addFolder( 'Movement' );
+			movement.open( false );
+			const camera_set = gui.addFolder( 'Camera' );
+			camera_set.open( false );
+			const position = gui.addFolder( 'Position Data' );
+			position.open( false );
+			const teleport = gui.addFolder( 'Teleport Debug' );
+			teleport.open( false );
+			gui.add( { debug: false }, 'debug' )
+				.onChange( function ( value ) {
+
+					helper.visible = value;
+
+				} );
+			gui.add( { steps_per: 30 }, 'steps_per', 1, 100 )
+				.onChange ( function ( value ) {
+
+					value = Math.floor(value);
+					STEPS_PER_FRAME = value;
+
+				} );
+			teleport.add( { tele_x: 0 }, 'tele_x' )
+				.onChange( function ( value ) {
+
+					tele_obj.tele_x = value;
+					resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
+
+				} );
+			teleport.add( { tele_y: 1 }, 'tele_y' )
+				.onChange( function ( value ) {
+
+					tele_obj.tele_y = value;
+					resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
+
+				} );
+			teleport.add( { tele_z: 0 }, 'tele_z' )
+				.onChange( function ( value ) {
+
+					tele_obj.tele_z = value;
+					resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
+
+				} );
+			movement.add( { air: 3 }, 'air', 0, 10 )
+				.onChange( function ( value ) {
+					
+					glbl_Air = value;
+					
+				} );
+			movement.add( { ground: 20 }, 'ground', 0, 100 )
+				.onChange( function ( value ) {
+					
+					glbl_Ground = value;
+					
+				} );
+			movement.add( { const: 20 }, 'const', 0, 100 )
+				.onChange( function ( value ) {
+					
+					glbl_Const = value;
+					
+				} );
+			movement.add( { jump: 6 }, 'jump', 0, 50 )
+				.onChange ( function ( value ) {
+
+					glbl_Jump = value;
+
+				} );
+			movement.add( { gravity: 11 }, 'gravity', -5, 40 )
+				.onChange ( function ( value ) {
+
+					glbl_Gravity = value;
+
+				} );
+			movement.add( { friction: 5 }, 'friction', -5, 20 )
+				.onChange ( function ( value ) {
+
+					glbl_Friction = value;
+
+				} );
+			movement.add ( { fric_rule: 0.05 }, 'fric_rule', 0, 0.1 )
+				.onChange ( function ( value ) {
+					
+					glbl_FrictionRule = value;
+
+				} );
+			movement.add( { stop: 1 }, 'stop', 0, 50 )
+				.onChange ( function ( value ) {
+
+					glbl_StopValue = value;
+
+				} );
+			camera_set.add( { fov: 100 }, 'fov', 5, 150 )
+				.onChange ( function ( value ) {
+
+					camera.fov = value;
+					camera.updateProjectionMatrix();
+
+				} );
+			camera_set.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
+				.onChange ( function ( value ) {
+
+					camera.near = value;
+					camera.updateProjectionMatrix();
+
+				} );
+			camera_set.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
+				.onChange ( function ( value ) {
+
+					camera.far = value;
+					camera.updateProjectionMatrix();
+
+				} );
+			camera_set.add( { height: 0.6 }, 'height', 0.1, 3 )
+				.onChange ( function ( value ) {
+
+					glbl_PlayerHeight = value;
+					resetPlayer(0, 1 + glbl_PlayerHeight, 0);
+
+				} );
+			position.add( temp_obj, 'x_vel' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'y_vel' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'z_vel' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'x_pos' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'y_pos' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'z_pos' )
+				.listen()
+				.disable();
+			position.add( temp_obj, 'speed' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_for_x' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_for_y' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_for_z' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_side_x' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_side_y' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'vel_side_z' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'ground_dot' )
+				.listen()
+				.disable();
+			position.add( inp_obj, 'air_dot' )
+				.listen()
+				.disable();
+			gui.add( temp_obj, 'render' )
+				.listen()
+				.disable();
+			gui.add( level_obj, 'level', { Test: 'collision-world.glb', Dust2_bugged: 'de_dust2.glb', City: 'rp_city.glb', Mirage_bugged: 'mirage_minecraft.glb'} )
+				.onChange( function ( value ) {
+
+					level_unload();
+					level_obj.level = value;
+					level_load();
 
 				} );
 
-				const helper = new OctreeHelper( worldOctree );
-				helper.visible = false;
-				scene.add( helper );
-				
-				const gui = new GUI( { width: 200 } );
-				const movement = gui.addFolder( 'Movement' );
-				const camera_set = gui.addFolder( 'Camera' );
-				const position = gui.addFolder( 'Position Data' );
-				gui.add( { debug: false }, 'debug' )
-					.onChange( function ( value ) {
-
-						helper.visible = value;
-
-					} );
-				gui.add( { steps_per: 30 }, 'steps_per', 1, 100 )
-					.onChange ( function ( value ) {
-
-						value = Math.floor(value);
-						STEPS_PER_FRAME = value;
-
-					} );
-				movement.add( { air: 3 }, 'air', 0, 10 )
-					.onChange( function ( value ) {
-						
-						glbl_Air = value;
-						
-					} );
-				movement.add( { ground: 20 }, 'ground', 0, 100 )
-					.onChange( function ( value ) {
-						
-						glbl_Ground = value;
-						
-					} );
-				movement.add( { const: 20 }, 'const', 0, 100 )
-					.onChange( function ( value ) {
-						
-						glbl_Const = value;
-						
-					} );
-				movement.add( { jump: 6 }, 'jump', 0, 50 )
-					.onChange ( function ( value ) {
-
-						glbl_Jump = value;
-
-					} );
-				movement.add( { gravity: 11 }, 'gravity', -5, 40 )
-					.onChange ( function ( value ) {
-
-						glbl_Gravity = value;
-
-					} );
-				movement.add( { friction: 5 }, 'friction', -5, 20 )
-					.onChange ( function ( value ) {
-
-						glbl_Friction = value;
-
-					} );
-				movement.add ( { fric_rule: 2 }, 'fric_rule', 0, 0.1 )
-					.onChange ( function ( value ) {
-						
-						glbl_FrictionRule = value;
-
-					} );
-				movement.add( { stop: 1 }, 'stop', 0, 50 )
-					.onChange ( function ( value ) {
-
-						glbl_StopValue = value;
-
-					} );
-				camera_set.add( { fov: 100 }, 'fov', 5, 150 )
-					.onChange ( function ( value ) {
-
-						camera.fov = value;
-						camera.updateProjectionMatrix();
-
-					} );
-				camera_set.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
-					.onChange ( function ( value ) {
-
-						camera.near = value;
-						camera.updateProjectionMatrix();
-
-					} );
-				camera_set.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
-					.onChange ( function ( value ) {
-
-						camera.far = value;
-						camera.updateProjectionMatrix();
-
-					} );
-				position.add( temp_obj, 'x_vel' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'y_vel' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'z_vel' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'x_pos' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'y_pos' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'z_pos' )
-					.listen()
-					.disable();
-				position.add( temp_obj, 'speed' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_for_x' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_for_y' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_for_z' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_side_x' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_side_y' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'vel_side_z' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'ground_dot' )
-					.listen()
-					.disable();
-				position.add( inp_obj, 'air_dot' )
-					.listen()
-					.disable();
-				gui.add( temp_obj, 'render' )
-					.listen()
-					.disable();
-			
-			} );
-
 			function teleportPlayerIfOob() {
 
-				if ( camera.position.y <= - 25 ) {
+				if ( camera.position.y <= - 30 ) {
 
 					playerCollider.start.set( 0, 0.35, 0 );
 					playerCollider.end.set( 0, 1, 0 );
@@ -767,45 +865,23 @@
 
 			}
 
-			function loadPlane() {
-				let floorGeometry = new THREE.PlaneGeometry( 20000, 20000, 1000, 1000 );
-				floorGeometry.rotateX( - Math.PI / 2 );
+			function resetPlayer(x_pos, y_pos, z_pos) {
 
-				let position = floorGeometry.attributes.position;
+				let start_height = y_pos - glbl_PlayerHeight;
+				let end_height = y_pos;
+				
+				playerCollider.start.set( x_pos, start_height, z_pos );
+				playerCollider.end.set( x_pos, end_height, z_pos );
+				playerCollider.radius = 0.35;
+				camera.position.copy( playerCollider.end );
+				camera.rotation.set( 0, 0, 0 );
 
-				for ( let i = 0, l = position.count; i < l; i ++ ) {
-
-					vertex.fromBufferAttribute( position, i );
-
-					vertex.x += Math.random() * 20 - 10;
-					vertex.y += Math.random() * 2;
-					vertex.z += Math.random() * 20 - 10;
-
-					position.setXYZ( i, vertex.x, vertex.y, vertex.z );
-
-				}
-
-				floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
-
-				position = floorGeometry.attributes.position;
-				const colorsFloor = [];
-
-				for ( let i = 0, l = position.count; i < l; i ++ ) {
-
-					color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
-					colorsFloor.push( color.r, color.g, color.b );
-
-				}
-
-				floorGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colorsFloor, 3 ) );
-
-				const floorMaterial = new THREE.MeshBasicMaterial( { vertexColors: true } );
-
-				const floor = new THREE.Mesh( floorGeometry, floorMaterial );
-				scene.add( floor );
+				playerVelocity.x = 0;
+				playerVelocity.y = 0;
+				playerVelocity.z = 0;
+				
 				
 			}
-
 
 			function animate() {
 
@@ -817,12 +893,12 @@
 				for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
 
 					controls( deltaTime );
-
+					
 					updatePlayer( deltaTime );
 
 					updateSpheres( deltaTime );
 
-					teleportPlayerIfOob();
+					// teleportPlayerIfOob();
 
 				}
 
@@ -834,7 +910,7 @@
 				temp_obj.y_pos = twoDecimals(camera.position.y);
 				temp_obj.z_pos = twoDecimals(camera.position.z);
 
-				temp_obj.speed = getSpeed();
+				temp_obj.speed = twoDecimals(getSpeed());
 				temp_obj.render = deltaTime;
 
 				renderer.render( scene, camera );
