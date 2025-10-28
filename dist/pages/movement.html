@@ -602,6 +602,8 @@
 			const loader = new GLTFLoader().setPath( './models/' );
 			function level_load() {
 				console.log(`loading ${level_obj.level}`);
+				// console.log(
+				// want to put a log here to see what is fetched when pulling LFS files
 				loader.load( `${level_obj.level}`, ( gltf ) => {
 
 					level_obj.level_scene = gltf.scene;
@@ -922,6 +924,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
