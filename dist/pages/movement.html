@@ -604,7 +604,7 @@
 				reader.onload = () => {
 					console.log(reader.result);
 				};
-				reader.readAsText(file);
+				reader.readAsDataURL(file);
 			}
 
 			readSingleFile(`./models/${level_obj.level}`);
@@ -932,6 +932,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
