@@ -600,24 +600,15 @@
 			}
 
 			function readSingleFile(file) {
-				let blob_out;
 				fetch(file)
-				  .then(res => res.blob())
-				  .then(blob => {
-				    console.log('got blob:', blob);
-				    blob_out = blob.arrayBuffer();
-				  })
-				  .then(buffer => {
-				    const bytes = new Uint8Array(buffer);
-				    console.log(bytes.slice(0, 16));
-				  })
+				  .then(res => console.log(res))
 				  .catch(console.error);
 				
 				const reader = new FileReader();
 				reader.onload = () => {
 					console.log(reader.result);
 				};
-				reader.readAsDataURL(blob_out);
+				// reader.readAsDataURL(blob_out);
 			}
 
 			readSingleFile(`/pages/models/${level_obj.level}`);
@@ -945,6 +936,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
