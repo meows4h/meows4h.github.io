@@ -612,7 +612,7 @@
 			  reader.readAsText(file);
 			}
 
-			readSingleFile(`${level_obj.level}`);
+			readSingleFile(`./models/${level_obj.level}`);
 			
 			const loader = new GLTFLoader().setPath( './models/' );
 			function level_load() {
@@ -937,6 +937,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
