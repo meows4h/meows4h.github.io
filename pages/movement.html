@@ -602,16 +602,10 @@
 			// 	fetch(file)
 			// 	  .then(res => console.log(res))
 			// 	  .catch(console.error);
-				
-			// 	const reader = new FileReader();
-			// 	reader.onload = () => {
-			// 		console.log(reader.result);
-			// 	};
-			// 	// reader.readAsDataURL(blob_out);
 			// }
 
 			// readSingleFile(`/pages/models/${level_obj.level}`);
-			
+			consoloe.log('loading setup');
 			const loader = new GLTFLoader().setPath( './models/' );
 			function level_load() {
 				console.log(`loading ${level_obj.level}`);
@@ -935,6 +929,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
