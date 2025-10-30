@@ -599,19 +599,19 @@
 
 			}
 
-			function readSingleFile(file) {
-				fetch(file)
-				  .then(res => console.log(res))
-				  .catch(console.error);
+			// function readSingleFile(file) {
+			// 	fetch(file)
+			// 	  .then(res => console.log(res))
+			// 	  .catch(console.error);
 				
-				const reader = new FileReader();
-				reader.onload = () => {
-					console.log(reader.result);
-				};
-				// reader.readAsDataURL(blob_out);
-			}
+			// 	const reader = new FileReader();
+			// 	reader.onload = () => {
+			// 		console.log(reader.result);
+			// 	};
+			// 	// reader.readAsDataURL(blob_out);
+			// }
 
-			readSingleFile(`/pages/models/${level_obj.level}`);
+			// readSingleFile(`/pages/models/${level_obj.level}`);
 			
 			const loader = new GLTFLoader().setPath( './models/' );
 			function level_load() {
@@ -936,6 +936,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
