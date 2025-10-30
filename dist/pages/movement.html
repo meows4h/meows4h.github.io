@@ -601,7 +601,7 @@
 
 			function readSingleFile(file) {
 				let blob_out;
-				fetch('file')
+				fetch(file)
 				  .then(res => res.blob())
 				  .then(blob => {
 				    console.log('got blob:', blob);
@@ -945,6 +945,7 @@
 		</script>
 	</body>
 </html>
+
 
 
 
