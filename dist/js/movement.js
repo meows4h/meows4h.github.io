@@ -1,0 +1,887 @@
+import * as THREE from 'three';
+
+import Stats from 'three/addons/libs/stats.module.js';
+
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+import { Octree } from 'three/addons/math/Octree.js';
+import { OctreeHelper } from 'three/addons/helpers/OctreeHelper.js';
+
+import { Capsule } from 'three/addons/math/Capsule.js';
+
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+const clock = new THREE.Clock();
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color( 0x88ccee );
+scene.fog = new THREE.Fog( 0x88ccee, 0, 900 );
+
+const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
+camera.rotation.order = 'YXZ';
+
+const fillLight1 = new THREE.HemisphereLight( 0x8dc1de, 0x00668d, 1.5 );
+fillLight1.position.set( 2, 1, 1 );
+scene.add( fillLight1 );
+
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 2.5 );
+directionalLight.position.set( - 5, 25, - 1 );
+directionalLight.castShadow = true;
+directionalLight.shadow.camera.near = 0.01;
+directionalLight.shadow.camera.far = 500;
+directionalLight.shadow.camera.right = 30;
+directionalLight.shadow.camera.left = - 30;
+directionalLight.shadow.camera.top	= 30;
+directionalLight.shadow.camera.bottom = - 30;
+directionalLight.shadow.mapSize.width = 1024;
+directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.radius = 4;
+directionalLight.shadow.bias = - 0.00006;
+scene.add( directionalLight );
+
+const container = document.getElementById( 'container' );
+
+const renderer = new THREE.WebGLRenderer( { antialias: true } );
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setAnimationLoop( animate );
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.VSMShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+container.appendChild( renderer.domElement );
+
+const stats = new Stats();
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.top = '0px';
+container.appendChild( stats.domElement );
+
+let glbl_Ground = 20;
+let glbl_Air = 3;
+let glbl_Const = 10;
+let glbl_Jump = 6;
+let glbl_Friction = 5;
+let glbl_StopValue = 1;
+let glbl_PlayerHeight = 0.6;
+const temp_obj = { x_vel: 0, y_vel: 0, z_vel: 0, x_pos: 0, y_pos: 0, z_pos: 0, speed: 0, render: 0 };
+const inp_obj = { vel_for_x: 0, vel_for_y: 0, vel_for_z: 0, vel_side_x: 0, vel_side_y: 0, vel_side_z: 0, ground_dot: 0, air_dot: 0 };
+const tele_obj = { tele_x: 0, tele_y: 1, tele_z: 0 };
+
+let glbl_FrameCheck = 0;
+let glbl_FrictionRule = 0.05;
+let glbl_Gravity = 11;
+
+const level_obj = { level: 'collision-world.glb', level_scene: null };
+
+const NUM_SPHERES = 100;
+const SPHERE_RADIUS = 0.2;
+
+let STEPS_PER_FRAME = 30;
+
+const sphereGeometry = new THREE.IcosahedronGeometry( SPHERE_RADIUS, 5 );
+const sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xdede8d } );
+
+const spheres = [];
+let sphereIdx = 0;
+
+for ( let i = 0; i < NUM_SPHERES; i ++ ) {
+
+    const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    sphere.castShadow = true;
+    sphere.receiveShadow = true;
+
+    scene.add( sphere );
+
+    spheres.push( {
+        mesh: sphere,
+        collider: new THREE.Sphere( new THREE.Vector3( 0, - 100, 0 ), SPHERE_RADIUS ),
+        velocity: new THREE.Vector3()
+    } );
+
+}
+
+const worldOctree = new Octree();
+
+const playerCollider = new Capsule( new THREE.Vector3( 0, 0.35, 0 ), new THREE.Vector3( 0, 1, 0 ), 0.35 );
+
+const playerVelocity = new THREE.Vector3();
+const playerDirection = new THREE.Vector3();
+
+let playerOnFloor = false;
+let mouseTime = 0;
+
+const keyStates = {};
+
+const vector1 = new THREE.Vector3();
+const vector2 = new THREE.Vector3();
+const vector3 = new THREE.Vector3();
+
+// const vertex = new THREE.Vector3();
+// const color = new THREE.Color();
+// loadPlane();
+
+document.addEventListener( 'keydown', ( event ) => {
+
+    keyStates[ event.code ] = true;
+
+} );
+
+document.addEventListener( 'keyup', ( event ) => {
+
+    keyStates[ event.code ] = false;
+
+} );
+
+container.addEventListener( 'mousedown', () => {
+
+    document.body.requestPointerLock();
+
+    mouseTime = performance.now();
+
+} );
+
+document.addEventListener( 'mouseup', () => {
+
+    if ( document.pointerLockElement !== null ) throwBall();
+
+} );
+
+document.body.addEventListener( 'mousemove', ( event ) => {
+
+    if ( document.pointerLockElement === document.body ) {
+
+        camera.rotation.y -= event.movementX / 500;
+        camera.rotation.x -= event.movementY / 500;
+
+    }
+
+    // clamping view model
+    
+    if ( camera.rotation.x >= ( Math.PI / 2 )) {
+        camera.rotation.x = ( Math.PI / 2 ) 
+    }
+    
+    if ( camera.rotation.x <= ( -Math.PI / 2 )) {
+        camera.rotation.x = ( -Math.PI / 2 ) 
+    }
+
+} );
+
+window.addEventListener( 'resize', onWindowResize );
+
+function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
+function throwBall() {
+
+    const sphere = spheres[ sphereIdx ];
+
+    camera.getWorldDirection( playerDirection );
+
+    sphere.collider.center.copy( playerCollider.end ).addScaledVector( playerDirection, playerCollider.radius * 1.5 );
+
+    // throw the ball with more force if we hold the button longer, and if we move forward
+
+    const impulse = 15 + 30 * ( 1 - Math.exp( ( mouseTime - performance.now() ) * 0.001 ) );
+
+    sphere.velocity.copy( playerDirection ).multiplyScalar( impulse );
+    sphere.velocity.addScaledVector( playerVelocity, 2 );
+
+    sphereIdx = ( sphereIdx + 1 ) % spheres.length;
+
+}
+
+function playerCollisions() {
+
+    const result = worldOctree.capsuleIntersect( playerCollider );
+
+    playerOnFloor = false;
+
+    if ( result ) {
+
+        // checking if object normal that player capsule is interacting with is facing upwards
+        playerOnFloor = result.normal.y > 0;
+
+        if ( ! playerOnFloor ) {
+
+            playerVelocity.addScaledVector( result.normal, - result.normal.dot( playerVelocity ) );
+
+        }
+
+        if ( result.depth >= 1e-10 ) {
+
+            playerCollider.translate( result.normal.multiplyScalar( result.depth ) );
+
+        }
+
+    }
+
+}
+
+function updatePlayer( deltaTime ) {
+
+    //let damping = Math.exp( - 4 * deltaTime ) - 1;
+
+    if ( ! playerOnFloor ) {
+
+        playerVelocity.y -= glbl_Gravity * deltaTime;
+
+        // removed air resistance
+        //damping *= 0.00;
+
+    }
+    //playerVelocity.addScaledVector( playerVelocity, damping );
+
+    const deltaPosition = playerVelocity.clone().multiplyScalar( deltaTime );
+    playerCollider.translate( deltaPosition );
+
+    playerCollisions();
+
+    camera.position.copy( playerCollider.end );
+
+}
+
+function playerSphereCollision( sphere ) {
+
+    const center = vector1.addVectors( playerCollider.start, playerCollider.end ).multiplyScalar( 0.5 );
+
+    const sphere_center = sphere.collider.center;
+
+    const r = playerCollider.radius + sphere.collider.radius;
+    const r2 = r * r;
+
+    // approximation: player = 3 spheres
+
+    for ( const point of [ playerCollider.start, playerCollider.end, center ] ) {
+
+        const d2 = point.distanceToSquared( sphere_center );
+
+        if ( d2 < r2 ) {
+
+            const normal = vector1.subVectors( point, sphere_center ).normalize();
+            const v1 = vector2.copy( normal ).multiplyScalar( normal.dot( playerVelocity ) );
+            const v2 = vector3.copy( normal ).multiplyScalar( normal.dot( sphere.velocity ) );
+
+            playerVelocity.add( v2 ).sub( v1 );
+            sphere.velocity.add( v1 ).sub( v2 );
+
+            const d = ( r - Math.sqrt( d2 ) ) / 2;
+            sphere_center.addScaledVector( normal, - d );
+
+        }
+
+    }
+
+}
+
+function spheresCollisions() {
+
+    for ( let i = 0, length = spheres.length; i < length; i ++ ) {
+
+        const s1 = spheres[ i ];
+
+        for ( let j = i + 1; j < length; j ++ ) {
+
+            const s2 = spheres[ j ];
+
+            const d2 = s1.collider.center.distanceToSquared( s2.collider.center );
+            const r = s1.collider.radius + s2.collider.radius;
+            const r2 = r * r;
+
+            if ( d2 < r2 ) {
+
+                const normal = vector1.subVectors( s1.collider.center, s2.collider.center ).normalize();
+                const v1 = vector2.copy( normal ).multiplyScalar( normal.dot( s1.velocity ) );
+                const v2 = vector3.copy( normal ).multiplyScalar( normal.dot( s2.velocity ) );
+
+                s1.velocity.add( v2 ).sub( v1 );
+                s2.velocity.add( v1 ).sub( v2 );
+
+                const d = ( r - Math.sqrt( d2 ) ) / 2;
+
+                s1.collider.center.addScaledVector( normal, d );
+                s2.collider.center.addScaledVector( normal, - d );
+
+            }
+
+        }
+
+    }
+
+}
+
+function updateSpheres( deltaTime ) {
+
+    spheres.forEach( sphere => {
+
+        sphere.collider.center.addScaledVector( sphere.velocity, deltaTime );
+
+        const result = worldOctree.sphereIntersect( sphere.collider );
+
+        if ( result ) {
+
+            sphere.velocity.addScaledVector( result.normal, - result.normal.dot( sphere.velocity ) * 1.5 );
+            sphere.collider.center.add( result.normal.multiplyScalar( result.depth ) );
+
+        } else {
+
+            sphere.velocity.y -= glbl_Gravity * deltaTime;
+
+        }
+
+        const damping = Math.exp( - 1.5 * deltaTime ) - 1;
+        sphere.velocity.addScaledVector( sphere.velocity, damping );
+
+        playerSphereCollision( sphere );
+
+    } );
+
+    spheresCollisions();
+
+    for ( const sphere of spheres ) {
+
+        sphere.mesh.position.copy( sphere.collider.center );
+
+    }
+
+}
+
+function getMagnitude2D(compA, compB) {
+    let composite_len = 0;
+    composite_len = ((compA ** 2) + (compB ** 2)) ** 1/2
+    return composite_len;
+}
+
+function dotProduct(vectorA, vectorB) {
+    let result = 0;
+    result += vectorA.x * vectorB.x;
+    result += vectorA.z * vectorB.z;
+    return result;
+}
+
+function groundFriction(delta) {
+    let speed = getSpeed();
+    if (speed <= 0) {
+        // playerVelocity.x = 0;
+        // playerVelocity.z = 0;
+        return new THREE.Vector3();
+    }
+    let control = 0;
+    if (speed < glbl_StopValue) {
+        control = glbl_StopValue;
+    } else {
+        control = speed;
+    }
+
+    let new_speed = speed - (delta * control * glbl_Friction);
+    if (new_speed < 0) {
+        new_speed = 0;
+    }
+    new_speed /= speed;
+    new_speed = 1 - new_speed;
+    if (new_speed <= 0) {
+        playerVelocity.x = 0;
+        playerVelocity.y = 0;
+        playerVelocity.z = 0;
+        new_speed = 0;
+    }
+        
+    const friction_vector = new THREE.Vector3(-(playerVelocity.x * new_speed), -(playerVelocity.y * new_speed), -(playerVelocity.z * new_speed));
+    return friction_vector;
+}
+
+function twoDecimals(number) {
+    return Math.floor(number * 100) / 100;
+}
+
+function getSpeed() {
+    return getMagnitude2D(Math.abs(playerVelocity.x), Math.abs(playerVelocity.z));
+}
+
+function groundAccelerate(inp_velocity, wish_direction, delta) {
+    let add_speed, accel_speed, curr_speed;
+
+    curr_speed = dotProduct(inp_velocity, wish_direction);
+    inp_obj.ground_dot = curr_speed;
+    add_speed = glbl_Ground - curr_speed;
+    if (add_speed <= 0) {
+        return new THREE.Vector3();
+    }
+    
+    accel_speed = glbl_Const * glbl_Ground * delta;
+    if (accel_speed > add_speed) {
+        accel_speed = add_speed;
+    }
+
+    const ret_velocity = new THREE.Vector3(accel_speed * wish_direction.x, 0, accel_speed * wish_direction.z);
+    return ret_velocity;
+}
+
+function airAccelerate(inp_velocity, wish_velocity, delta) {
+    let add_speed, wish_speed, accel_speed, curr_speed;
+
+    wish_speed = getMagnitude2D(wish_velocity.x, wish_velocity.z);
+    if (wish_speed > glbl_Air) {
+        wish_speed = glbl_Air;
+    }
+
+    curr_speed = dotProduct(inp_velocity, wish_velocity);
+    inp_obj.air_dot = curr_speed;
+    add_speed = wish_speed - curr_speed;
+    if (add_speed <= 0) {
+        return new THREE.Vector3();
+    }
+
+    accel_speed = glbl_Const * glbl_Ground * delta;
+    if (accel_speed > add_speed) {
+        accel_speed = add_speed;
+    }
+
+    const ret_velocity = new THREE.Vector3(accel_speed * wish_velocity.x, 0, accel_speed * wish_velocity.z);
+    return ret_velocity;
+    
+}
+
+function getForwardVector() {
+
+    camera.getWorldDirection( playerDirection );
+    playerDirection.y = 0;
+    playerDirection.normalize();
+
+    return playerDirection;
+
+}
+
+function getSideVector() {
+
+    camera.getWorldDirection( playerDirection );
+    playerDirection.y = 0;
+    playerDirection.normalize();
+    playerDirection.cross( camera.up );
+
+    return playerDirection;
+
+}
+
+function controls( deltaTime ) {
+
+    const direction_vector = new THREE.Vector3();
+
+    if ( keyStates[ 'KeyR' ] ) {
+        resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
+    }
+
+    if ( keyStates [ 'KeyP' ] ) {
+        playerVelocity.y = 10;
+    }
+    
+    if ( playerOnFloor ) {
+        if ( keyStates[ 'KeyW' ] ) {
+
+            direction_vector.add( getForwardVector().multiplyScalar( glbl_Ground ) )
+
+        }
+
+        if ( keyStates[ 'KeyS' ] ) {
+
+            direction_vector.add( getForwardVector().multiplyScalar( - glbl_Ground ) );
+            
+        }
+
+        if ( keyStates[ 'KeyA' ] ) {
+
+            direction_vector.add( getSideVector().multiplyScalar( - glbl_Ground ) );
+
+        }
+
+        if ( keyStates[ 'KeyD' ] ) {
+
+            direction_vector.add( getSideVector().multiplyScalar( glbl_Ground ) );
+
+        }
+
+        direction_vector.setLength( glbl_Ground );
+        const movement_vel = groundAccelerate(playerVelocity, direction_vector, deltaTime);
+        const friction_vel = groundFriction(deltaTime);
+        
+        if (glbl_FrameCheck >= glbl_FrictionRule) {
+            movement_vel.add(friction_vel);
+        } else {
+            glbl_FrameCheck += deltaTime;
+        }
+        
+        playerVelocity.add(movement_vel);
+
+        if ( keyStates[ 'Space' ] ) {
+
+            playerVelocity.y = glbl_Jump;
+
+        }
+
+    } else {
+
+        glbl_FrameCheck = 0;
+        
+        if ( keyStates[ 'KeyW' ] ) {
+
+            direction_vector.add(getForwardVector().multiplyScalar( glbl_Air ));
+
+        }
+
+        if ( keyStates[ 'KeyS' ] ) {
+
+            direction_vector.add(getForwardVector().multiplyScalar( - glbl_Air ));
+
+        }
+
+        if ( keyStates[ 'KeyA' ] ) {
+
+            direction_vector.add(getSideVector().multiplyScalar( - glbl_Air ));
+
+        }
+
+        if ( keyStates[ 'KeyD' ] ) {
+
+            direction_vector.add(getSideVector().multiplyScalar( glbl_Air ));
+
+        }
+        direction_vector.setLength( glbl_Air );
+        const air_vel = airAccelerate(playerVelocity, direction_vector, deltaTime);
+        playerVelocity.add( air_vel );
+
+}
+
+}
+
+// function readSingleFile(file) {
+// 	fetch(file)
+// 	  .then(res => console.log(res))
+// 	  .catch(console.error);
+// }
+
+// readSingleFile(`/pages/models/${level_obj.level}`);
+console.log('loading setup');
+const loader = new GLTFLoader().setPath( './models/' );
+function level_load() {
+    console.log(`loading ${level_obj.level}`);
+    loader.load( `${level_obj.level}`, ( gltf ) => {
+
+        level_obj.level_scene = gltf.scene;
+        level_obj.level_scene.name = 'LoadedLevel';
+        scene.add( level_obj.level_scene );
+
+        worldOctree.fromGraphNode( level_obj.level_scene );
+
+        level_obj.level_scene.traverse( child => {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+
+                if ( child.material.map ) {
+                    child.material.map.anisotropy = 4;
+                }
+            }
+        } );
+    } );
+}
+
+level_load();
+
+function disposeHierarchy(node) {
+    if (node.geometry) {
+    node.geometry.dispose();
+    }
+
+    if (node.material) {
+    if (Array.isArray(node.material)) {
+        for (const material of node.material) {
+        disposeMaterial(material);
+        }
+    } else {
+        disposeMaterial(node.material);
+    }
+    }
+    for (const child of node.children) {
+    disposeHierarchy(child);
+    }
+}
+
+function disposeMaterial(material) {
+    for (const key of Object.keys(material)) {
+    const value = material[key];
+    if (value && typeof value.dispose === 'function') {
+        value.dispose();
+    }
+    }
+    material.dispose();
+}
+
+function level_unload() {
+    // fwiw it MAY be worth revisting this later bc this log was bugged
+    // it might be unloading other things idk. will see
+    console.log(`unloading current level`);
+    if (level_obj.level_scene) {
+    disposeHierarchy(level_obj.level_scene);
+    scene.remove(level_obj.level_scene);
+    level_obj.level_scene = null;
+    }
+    
+    if (worldOctree) {
+    worldOctree.clear();
+    }
+}
+
+const helper = new OctreeHelper( worldOctree );
+helper.visible = false;
+scene.add( helper );
+
+const gui = new GUI( { width: 200 } );
+const movement = gui.addFolder( 'Movement' );
+movement.open( false );
+const camera_set = gui.addFolder( 'Camera' );
+camera_set.open( false );
+const position = gui.addFolder( 'Position Data' );
+position.open( false );
+const teleport = gui.addFolder( 'Teleport Debug' );
+teleport.open( false );
+gui.add( { debug: false }, 'debug' )
+    .onChange( function ( value ) {
+
+        helper.visible = value;
+
+    } );
+gui.add( { steps_per: 30 }, 'steps_per', 1, 100 )
+    .onChange ( function ( value ) {
+
+        value = Math.floor(value);
+        STEPS_PER_FRAME = value;
+
+    } );
+teleport.add( { tele_x: 0 }, 'tele_x' )
+    .onChange( function ( value ) {
+
+        tele_obj.tele_x = value;
+        resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
+
+    } );
+teleport.add( { tele_y: 1 }, 'tele_y' )
+    .onChange( function ( value ) {
+
+        tele_obj.tele_y = value;
+        resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
+
+    } );
+teleport.add( { tele_z: 0 }, 'tele_z' )
+    .onChange( function ( value ) {
+
+        tele_obj.tele_z = value;
+        resetPlayer(tele_obj.tele_x, tele_obj.tele_y + glbl_PlayerHeight, tele_obj.tele_z);
+
+    } );
+movement.add( { air: 3 }, 'air', 0, 10 )
+    .onChange( function ( value ) {
+        
+        glbl_Air = value;
+        
+    } );
+movement.add( { ground: 20 }, 'ground', 0, 100 )
+    .onChange( function ( value ) {
+        
+        glbl_Ground = value;
+        
+    } );
+movement.add( { const: 20 }, 'const', 0, 100 )
+    .onChange( function ( value ) {
+        
+        glbl_Const = value;
+        
+    } );
+movement.add( { jump: 6 }, 'jump', 0, 50 )
+    .onChange ( function ( value ) {
+
+        glbl_Jump = value;
+
+    } );
+movement.add( { gravity: 11 }, 'gravity', -5, 40 )
+    .onChange ( function ( value ) {
+
+        glbl_Gravity = value;
+
+    } );
+movement.add( { friction: 5 }, 'friction', -5, 20 )
+    .onChange ( function ( value ) {
+
+        glbl_Friction = value;
+
+    } );
+movement.add ( { fric_rule: 0.05 }, 'fric_rule', 0, 0.1 )
+    .onChange ( function ( value ) {
+        
+        glbl_FrictionRule = value;
+
+    } );
+movement.add( { stop: 1 }, 'stop', 0, 50 )
+    .onChange ( function ( value ) {
+
+        glbl_StopValue = value;
+
+    } );
+camera_set.add( { fov: 100 }, 'fov', 5, 150 )
+    .onChange ( function ( value ) {
+
+        camera.fov = value;
+        camera.updateProjectionMatrix();
+
+    } );
+camera_set.add( { near_draw: 0.1 }, 'near_draw', 0.1, 50 )
+    .onChange ( function ( value ) {
+
+        camera.near = value;
+        camera.updateProjectionMatrix();
+
+    } );
+camera_set.add( { far_draw: 1000 }, 'far_draw', 1, 1000 )
+    .onChange ( function ( value ) {
+
+        camera.far = value;
+        camera.updateProjectionMatrix();
+
+    } );
+camera_set.add( { height: 0.6 }, 'height', 0.1, 3 )
+    .onChange ( function ( value ) {
+
+        glbl_PlayerHeight = value;
+        resetPlayer(0, 1 + glbl_PlayerHeight, 0);
+
+    } );
+position.add( temp_obj, 'x_vel' )
+    .listen()
+    .disable();
+position.add( temp_obj, 'y_vel' )
+    .listen()
+    .disable();
+position.add( temp_obj, 'z_vel' )
+    .listen()
+    .disable();
+position.add( temp_obj, 'x_pos' )
+    .listen()
+    .disable();
+position.add( temp_obj, 'y_pos' )
+    .listen()
+    .disable();
+position.add( temp_obj, 'z_pos' )
+    .listen()
+    .disable();
+position.add( temp_obj, 'speed' )
+    .listen()
+    .disable();
+position.add( inp_obj, 'vel_for_x' )
+    .listen()
+    .disable();
+position.add( inp_obj, 'vel_for_y' )
+    .listen()
+    .disable();
+position.add( inp_obj, 'vel_for_z' )
+    .listen()
+    .disable();
+position.add( inp_obj, 'vel_side_x' )
+    .listen()
+    .disable();
+position.add( inp_obj, 'vel_side_y' )
+    .listen()
+    .disable();
+position.add( inp_obj, 'vel_side_z' )
+    .listen()
+    .disable();
+position.add( inp_obj, 'ground_dot' )
+    .listen()
+    .disable();
+position.add( inp_obj, 'air_dot' )
+    .listen()
+    .disable();
+gui.add( temp_obj, 'render' )
+    .listen()
+    .disable();
+gui.add( level_obj, 'level', { Test: 'collision-world.glb', Dust2_bugged: 'de_dust2.glb', City: 'rp_city.glb', Mirage_bugged: 'mirage_minecraft.glb', Miami: 'CityMiami.glb', Desert: 'Desert.glb', Race1: 'Endurance.glb' } )
+    .onChange( function ( value ) {
+
+        level_unload();
+        level_obj.level = value;
+        level_load();
+
+    } );
+
+function teleportPlayerIfOob() {
+
+    if ( camera.position.y <= - 30 ) {
+
+        playerCollider.start.set( 0, 0.35, 0 );
+        playerCollider.end.set( 0, 1, 0 );
+        playerCollider.radius = 0.35;
+        camera.position.copy( playerCollider.end );
+        camera.rotation.set( 0, 0, 0 );
+
+    }
+
+}
+
+function resetPlayer(x_pos, y_pos, z_pos) {
+
+    let start_height = y_pos - glbl_PlayerHeight;
+    let end_height = y_pos;
+    
+    playerCollider.start.set( x_pos, start_height, z_pos );
+    playerCollider.end.set( x_pos, end_height, z_pos );
+    playerCollider.radius = 0.35;
+    camera.position.copy( playerCollider.end );
+    camera.rotation.set( 0, 0, 0 );
+
+    playerVelocity.x = 0;
+    playerVelocity.y = 0;
+    playerVelocity.z = 0;
+    
+    
+}
+
+function animate() {
+
+    const deltaTime = Math.min( 0.05, clock.getDelta() ) / STEPS_PER_FRAME;
+
+    // we look for collisions in substeps to mitigate the risk of
+    // an object traversing another too quickly for detection.
+
+    for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
+
+        controls( deltaTime );
+        
+        updatePlayer( deltaTime );
+
+        updateSpheres( deltaTime );
+
+        // teleportPlayerIfOob();
+
+    }
+
+    temp_obj.x_vel = twoDecimals(playerVelocity.x);
+    temp_obj.y_vel = twoDecimals(playerVelocity.y);
+    temp_obj.z_vel = twoDecimals(playerVelocity.z);
+    
+    temp_obj.x_pos = twoDecimals(camera.position.x);
+    temp_obj.y_pos = twoDecimals(camera.position.y);
+    temp_obj.z_pos = twoDecimals(camera.position.z);
+
+    temp_obj.speed = twoDecimals(getSpeed());
+    temp_obj.render = deltaTime;
+
+    renderer.render( scene, camera );
+
+    stats.update();
+
+}
