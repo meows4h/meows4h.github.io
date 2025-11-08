@@ -50,15 +50,17 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.VSMShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
-const container = document.getElementById( 'container' );
-container.appendChild( renderer.domElement );
+const main_container = document.getElementById( 'main-container' );
+main_container.appendChild( renderer.domElement );
 
 // ascii effect
 const effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
 effect.setSize( window.innerWidth, window.innerHeight );
 effect.domElement.style.color = 'white';
 effect.domElement.style.backgroundColor = 'black';
-container.appendChild( effect.domElement );
+
+const ascii_container = document.getElementById( 'ascii-container' );
+ascii_container.appendChild( effect.domElement );
 
 // gui setup
 const gui = new GUI( { width: 150 } );
@@ -66,6 +68,14 @@ gui.add( { ascii: false }, 'ascii' )
     .onChange( function ( value ) {
 
         render_ascii = value;
+
+        if (value == true) {
+            ascii_container.style.display = 'block';
+            main_container.style.display = 'none';
+        } else {
+            ascii_container.style.display = 'none';
+            main_container.style.display = 'block';
+        }
 
     } );
 
@@ -101,10 +111,10 @@ function animate() {
         effect.render( scene, camera );
     }
 
-    if ( keyStates[ 'KeyW' ] ) { cube.rotation.y += 0.1 * delta; }
-    if ( keyStates[ 'KeyA' ] ) { cube.rotation.x -= 0.1 * delta; }
-    if ( keyStates[ 'KeyS' ] ) { cube.rotation.y -= 0.1 * delta; }
-    if ( keyStates[ 'KeyD' ] ) { cube.rotation.x += 0.1 * delta; }
+    if ( keyStates[ 'KeyW' ] ) { cube.rotation.x += 1 * delta; }
+    if ( keyStates[ 'KeyA' ] ) { cube.rotation.y -= 1 * delta; }
+    if ( keyStates[ 'KeyS' ] ) { cube.rotation.x -= 1 * delta; }
+    if ( keyStates[ 'KeyD' ] ) { cube.rotation.y += 1 * delta; }
     
 
 }
