@@ -111,10 +111,9 @@ function animate() {
         effect.render( scene, camera );
     }
 
-    if ( keyStates[ 'KeyW' ] ) { cube.rotation.x += 1 * delta; }
-    if ( keyStates[ 'KeyA' ] ) { cube.rotation.y -= 1 * delta; }
-    if ( keyStates[ 'KeyS' ] ) { cube.rotation.x -= 1 * delta; }
-    if ( keyStates[ 'KeyD' ] ) { cube.rotation.y += 1 * delta; }
-    
+    if ( keyStates[ 'KeyW' ] ) { cube.rotation.x -= 1 * delta; }
+    if ( keyStates[ 'KeyA' ] ) { cube.rotation.y += 1 * delta; }
+    if ( keyStates[ 'KeyS' ] ) { cube.rotation.x += 1 * delta; }
+    if ( keyStates[ 'KeyD' ] ) { cube.rotation.y -= 1 * delta; }
 
 }
