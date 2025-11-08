@@ -1,12 +1,20 @@
 import * as THREE from 'three';
+
+// additional effects / libraries
+import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
             
+// internal clock
 const clock = new THREE.Clock();
 
+// scene setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color( 0xffffff ); // white fog
 scene.fog = new THREE.Fog( 0xffffff, 0, 900 );
 
-// need camera HERE
+// camera settings
+const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
+camera.rotation.order = 'YXZ';
 
 // main lighting
 const mainLight = new THREE.HemisphereLight( 0x8dc1de, 0x00668d, 1.5 );
@@ -42,6 +50,23 @@ container.appendChild( renderer.domElement );
 // input tracking
 const keyStates = {};
 
+// ascii effect
+let render_ascii = false;
+effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
+effect.setSize( window.innerWidth, window.innerHeight );
+effect.domElement.style.color = 'white';
+effect.domElement.style.backgroundColor = 'black';
+document.body.appendChild( effect.domElement );
+
+// gui setup
+const gui = new GUI( { width: 150 } );
+gui.add( { ascii: false }, 'ascii' )
+    .onChange( function ( value ) {
+
+        render_ascii = value;
+
+    } );
+
 document.addEventListener( 'keydown', ( event ) => {
 
     keyStates[ event.code ] = true;
@@ -53,3 +78,13 @@ document.addEventListener( 'keyup', ( event ) => {
     keyStates[ event.code ] = false;
 
 } );
+
+function animate() {
+
+    if (!render_ascii) {
+        renderer.render( scene, camera );
+    } else {
+        effect.render( scene, camera );
+    }
+
+}
