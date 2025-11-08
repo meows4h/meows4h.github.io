@@ -18,6 +18,7 @@ scene.fog = new THREE.Fog( 0xffffff, 0, 900 );
 // camera settings
 const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.rotation.order = 'YXZ';
+camera.position.z = 5;
 
 // main lighting
 const mainLight = new THREE.HemisphereLight( 0x8dc1de, 0x00668d, 1.5 );
@@ -52,9 +53,6 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 const container = document.getElementById( 'container' );
 container.appendChild( renderer.domElement );
 
-// input tracking
-const keyStates = {};
-
 // ascii effect
 const effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
 effect.setSize( window.innerWidth, window.innerHeight );
@@ -71,6 +69,16 @@ gui.add( { ascii: false }, 'ascii' )
 
     } );
 
+
+// test cube
+const geometry = new THREE.BoxGeometry(2, 2, 2);
+const material = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+// input tracking
+const keyStates = {};
+
 document.addEventListener( 'keydown', ( event ) => {
 
     keyStates[ event.code ] = true;
@@ -85,10 +93,18 @@ document.addEventListener( 'keyup', ( event ) => {
 
 function animate() {
 
+    const delta = clock.getDelta();
+
     if (render_ascii == false) {
         renderer.render( scene, camera );
     } else {
         effect.render( scene, camera );
     }
+
+    if ( keyStates[ 'KeyW' ] ) { cube.rotation.y += 0.1 * delta; }
+    if ( keyStates[ 'KeyA' ] ) { cube.rotation.x -= 0.1 * delta; }
+    if ( keyStates[ 'KeyS' ] ) { cube.rotation.y -= 0.1 * delta; }
+    if ( keyStates[ 'KeyD' ] ) { cube.rotation.x += 0.1 * delta; }
+    
 
 }
