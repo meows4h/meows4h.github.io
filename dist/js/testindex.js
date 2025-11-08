@@ -56,7 +56,7 @@ container.appendChild( renderer.domElement );
 const keyStates = {};
 
 // ascii effect
-effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
+const effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
 effect.setSize( window.innerWidth, window.innerHeight );
 effect.domElement.style.color = 'white';
 effect.domElement.style.backgroundColor = 'black';
