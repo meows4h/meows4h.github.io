@@ -48,6 +48,8 @@ renderer.setAnimationLoop( animate );
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.VSMShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+const container = document.getElementById( 'container' );
 container.appendChild( renderer.domElement );
 
 // input tracking
@@ -58,7 +60,7 @@ effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
 effect.setSize( window.innerWidth, window.innerHeight );
 effect.domElement.style.color = 'white';
 effect.domElement.style.backgroundColor = 'black';
-document.body.appendChild( effect.domElement );
+container.appendChild( effect.domElement );
 
 // gui setup
 const gui = new GUI( { width: 150 } );
