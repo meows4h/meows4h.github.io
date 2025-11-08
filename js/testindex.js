@@ -3,7 +3,10 @@ import * as THREE from 'three';
 // additional effects / libraries
 import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-            
+
+// global vars
+let render_ascii = false;
+
 // internal clock
 const clock = new THREE.Clock();
 
@@ -51,7 +54,6 @@ container.appendChild( renderer.domElement );
 const keyStates = {};
 
 // ascii effect
-let render_ascii = false;
 effect = new AsciiEffect ( renderer, ' .:-+*=@#█', { invert: true } );
 effect.setSize( window.innerWidth, window.innerHeight );
 effect.domElement.style.color = 'white';
@@ -81,7 +83,7 @@ document.addEventListener( 'keyup', ( event ) => {
 
 function animate() {
 
-    if (!render_ascii) {
+    if (render_ascii == false) {
         renderer.render( scene, camera );
     } else {
         effect.render( scene, camera );
