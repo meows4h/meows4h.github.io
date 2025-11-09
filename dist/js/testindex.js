@@ -7,6 +7,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 // global vars
 let render_ascii = false;
 
+let scroll = 0;
+let page_state = 0;
+
+let target_x, target_y, target_z, curr_x, curr_y, curr_z;
+let tar_rot_x, tar_rot_y, tar_rot_z, rot_x, rot_y, rot_z;
+let time_elapsed = 0;
+let transition_time = 2;
+
 // internal clock
 const clock = new THREE.Clock();
 
@@ -101,6 +109,80 @@ document.addEventListener( 'keyup', ( event ) => {
 
 } );
 
+document.addEventListener( 'wheel', ( event ) => {
+
+    let old_scroll = scroll;
+    let old_state = page_state;
+    scroll += event.deltaY * -1;
+    if (scroll < old_scroll) {
+        page_state--;
+    } else if (scroll > old_scroll) {
+        page_state++;
+    }
+
+    if (page_state < 0) {
+        page_state = 0;
+    } else if (page_state > 2) {
+        page_state = 2;
+    }
+
+    transition(old_state);
+
+} );
+
+function tween() {
+
+    camera.position.x = curr_x + ((target_x - curr_x) * (time_elapsed / transition_time));
+    camera.position.y = curr_y + ((target_y - curr_y) * (time_elapsed / transition_time));
+    camera.position.z = curr_z + ((target_z - curr_z) * (time_elapsed / transition_time));
+
+    camera.rotation.x = rot_x + ((tar_rot_x - rot_x) * (time_elapsed / transition_time));
+    camera.rotation.y = rot_y + ((tar_rot_y - rot_y) * (time_elapsed / transition_time));
+    camera.rotation.z = rot_z + ((tar_rot_z - rot_z) * (time_elapsed / transition_time));
+
+}
+
+function transition(old_state) {
+
+    if (old_state == page_state) {
+        return;
+    }
+
+    time_elapsed = 0;
+
+    curr_x = camera.position.x;
+    curr_y = camera.position.y;
+    curr_z = camera.position.z;
+
+    rot_x = camera.rotation.x;
+    rot_y = camera.rotation.y;
+    rot_z = camera.rotation.z;
+
+    if (page_state == 0) {
+        target_x = 0;
+        target_y = 0;
+        target_z = 5;
+        tar_rot_x = 0;
+        tar_rot_y = 0;
+        tar_rot_z = 0;
+    } else if (page_state == 1) {
+        target_x = 5;
+        target_y = 5;
+        target_z = 0;
+        tar_rot_x = 45;
+        tar_rot_y = 0;
+        tar_rot_z = 0;
+    } else if (page_state == 2) {
+        target_x = 0;
+        target_y = 0;
+        target_z = 0;
+        tar_rot_x = 0;
+        tar_rot_y = 0;
+        tar_rot_z = 0;
+    }
+
+}
+
 function animate() {
 
     const delta = clock.getDelta();
@@ -109,6 +191,11 @@ function animate() {
         renderer.render( scene, camera );
     } else {
         effect.render( scene, camera );
+    }
+
+    if (time_elapsed <= transition_time) {
+        tween();
+        time_elapsed += delta;
     }
 
     if ( keyStates[ 'KeyW' ] ) { cube.rotation.x -= 1 * delta; }
