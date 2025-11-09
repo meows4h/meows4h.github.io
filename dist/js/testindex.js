@@ -173,7 +173,7 @@ function tween(delta) {
         let tri_height = sine_out - last_shift.y_cord; // height of triangle at top
         let rram = x_change * sine_out; // right riemann
         let triangle = (x_change * tri_height) / 2;
-        // if (triangle < 0) { triangle = 0; }
+        if (triangle < 0) { triangle = 0; }
         let area = rram + triangle;
 
         // alternative solution : change to rram and keep rram + triangle, which might overshoot
@@ -233,9 +233,9 @@ function transition(old_state) {
         target_x = 5;
         target_y = 5;
         target_z = 0;
-        tar_rot_x = degreesToRadians( 90 );
-        tar_rot_y = 0;
-        tar_rot_z = 0;
+        tar_rot_x = degreesToRadians( -90 );
+        tar_rot_y = degreesToRadians( -20 );
+        tar_rot_z = degreesToRadians( -5 );
 
     } else if (page_state == 2) {
 
