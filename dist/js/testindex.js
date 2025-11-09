@@ -15,8 +15,6 @@ let tar_rot_x, tar_rot_y, tar_rot_z, rot_x, rot_y, rot_z;
 let time_elapsed = 0;
 let transition_time = 2;
 
-transition(1); // set all the values to the correct state
-
 // internal clock
 const clock = new THREE.Clock();
 
@@ -50,6 +48,9 @@ directionalLight.shadow.mapSize.height = 1024;
 directionalLight.shadow.radius = 4;
 directionalLight.shadow.bias = - 0.00006;
 scene.add( directionalLight );
+
+// set camera targets
+transition(1);
 
 // renderer
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
