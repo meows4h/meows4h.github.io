@@ -101,7 +101,7 @@ gui.add( { linear: false }, 'linear' )
 
 // test cube
 const geometry = new THREE.BoxGeometry(2, 2, 2);
-const material = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
@@ -236,7 +236,7 @@ function animate() {
         effect.render( scene, camera );
     }
 
-    if (time_elapsed <= transition_time) {
+    if (time_elapsed < transition_time) {
         tween();
         time_elapsed += delta;
     }
