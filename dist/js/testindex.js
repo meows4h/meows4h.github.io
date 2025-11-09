@@ -14,6 +14,8 @@ let target_x, target_y, target_z, curr_x, curr_y, curr_z;
 let tar_rot_x, tar_rot_y, tar_rot_z, rot_x, rot_y, rot_z;
 let time_elapsed = 0;
 let transition_time = 2;
+let transition_amp = 1;
+let linear_trans = false;
 
 // internal clock
 const clock = new THREE.Clock();
@@ -89,6 +91,12 @@ gui.add( { ascii: false }, 'ascii' )
         }
 
     } );
+gui.add( { linear: false }, 'linear' )
+    .onChange( function ( value ) {
+
+        linear_trans = value;
+
+    } );
 
 
 // test cube
@@ -139,13 +147,35 @@ function degreesToRadians(degrees) {
 
 function tween() {
 
-    camera.position.x = curr_x + ((target_x - curr_x) * (time_elapsed / transition_time));
-    camera.position.y = curr_y + ((target_y - curr_y) * (time_elapsed / transition_time));
-    camera.position.z = curr_z + ((target_z - curr_z) * (time_elapsed / transition_time));
+    let x_val, y_val, z_val, x_rot, y_rot, z_rot;
 
-    camera.rotation.x = rot_x + ((tar_rot_x - rot_x) * (time_elapsed / transition_time));
-    camera.rotation.y = rot_y + ((tar_rot_y - rot_y) * (time_elapsed / transition_time));
-    camera.rotation.z = rot_z + ((tar_rot_z - rot_z) * (time_elapsed / transition_time));
+    if (linear_trans == true) {
+
+        x_val = curr_x + ((target_x - curr_x) * (time_elapsed / transition_time));
+        y_val = curr_y + ((target_y - curr_y) * (time_elapsed / transition_time));
+        z_val = curr_z + ((target_z - curr_z) * (time_elapsed / transition_time));
+
+        x_rot = rot_x + ((tar_rot_x - rot_x) * (time_elapsed / transition_time));
+        y_rot = rot_y + ((tar_rot_y - rot_y) * (time_elapsed / transition_time));
+        z_rot = rot_z + ((tar_rot_z - rot_z) * (time_elapsed / transition_time));
+
+    } else {
+
+        let amp = (transition_amp * (Math.PI / 2)) / transition_time;
+        let period = (1 / transition_time) * Math.PI;
+
+        x_val = curr_x + ((target_x - curr_x) * (amp * Math.sin(period * time_elapsed)));
+        y_val = curr_y + ((target_y - curr_y) * (amp * Math.sin(period * time_elapsed)));
+        z_val = curr_z + ((target_z - curr_z) * (amp * Math.sin(period * time_elapsed)));
+
+        x_rot = rot_x + ((tar_rot_x - rot_x) * (amp * Math.sin(period * time_elapsed)));
+        y_rot = rot_y + ((tar_rot_y - rot_y) * (amp * Math.sin(period * time_elapsed)));
+        z_rot = rot_z + ((tar_rot_z - rot_z) * (amp * Math.sin(period * time_elapsed)));
+
+    }
+    
+    camera.position.set(x_val, y_val, z_val);
+    camera.rotation.set(x_rot, y_rot, z_rot);
 
 }
 
@@ -166,26 +196,32 @@ function transition(old_state) {
     rot_z = camera.rotation.z;
 
     if (page_state == 0) {
+
         target_x = 0;
         target_y = 0;
         target_z = 5;
         tar_rot_x = 0;
         tar_rot_y = 0;
         tar_rot_z = 0;
+
     } else if (page_state == 1) {
+
         target_x = 5;
         target_y = 5;
         target_z = 0;
-        tar_rot_x = degreesToRadians( 20 );
+        tar_rot_x = degreesToRadians( 90 );
         tar_rot_y = 0;
         tar_rot_z = 0;
+
     } else if (page_state == 2) {
+
         target_x = 0;
         target_y = 0;
         target_z = 0;
         tar_rot_x = 0;
         tar_rot_y = 0;
         tar_rot_z = 0;
+
     }
 
 }
