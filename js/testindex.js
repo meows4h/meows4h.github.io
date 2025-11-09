@@ -205,9 +205,6 @@ function transition(old_state) {
         return;
     }
 
-    time_elapsed = 0;
-    total_shift = 0;
-
     curr_x = camera.position.x;
     curr_y = camera.position.y;
     curr_z = camera.position.z;
@@ -215,6 +212,9 @@ function transition(old_state) {
     rot_x = camera.rotation.x;
     rot_y = camera.rotation.y;
     rot_z = camera.rotation.z;
+
+    time_elapsed = 0;
+    total_shift = 0;
 
     if (page_state == 0) {
 
