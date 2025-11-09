@@ -199,12 +199,7 @@ function tween(delta) {
 
 }
 
-function transition(old_state) {
-
-    if (old_state == page_state) {
-        return;
-    }
-
+function set_state() {
     curr_x = camera.position.x;
     curr_y = camera.position.y;
     curr_z = camera.position.z;
@@ -213,8 +208,15 @@ function transition(old_state) {
     rot_y = camera.rotation.y;
     rot_z = camera.rotation.z;
 
-    time_elapsed = 0;
+    time_elapsed = 0; // maybe this needs to be based on total changes? this can be fixed
     total_shift = 0;
+}
+
+function transition(old_state) {
+
+    if (old_state == page_state) {
+        return;
+    }
 
     if (page_state == 0) {
 
@@ -244,6 +246,8 @@ function transition(old_state) {
         tar_rot_z = 0;
 
     }
+
+    set_state();
 
 }
 
