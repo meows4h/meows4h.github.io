@@ -171,9 +171,10 @@ function tween(delta) {
 
         let x_change = time_elapsed - last_shift.time; // x axis shift
         let tri_height = sine_out - last_shift.y_cord; // height of triangle at top
-        let lram = x_change * last_shift.y_cord; // left riemann
+        let rram = x_change * sine_out; // right riemann
         let triangle = (x_change * tri_height) / 2;
-        let area = lram + triangle;
+        // if (triangle < 0) { triangle = 0; }
+        let area = rram + triangle;
 
         // alternative solution : change to rram and keep rram + triangle, which might overshoot
         // better to overshoot than undershoot
