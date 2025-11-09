@@ -163,14 +163,23 @@ function tween() {
 
         let amp = (transition_amp * (Math.PI / 2)) / transition_time;
         let period = (1 / transition_time) * Math.PI;
+        let sine_out = amp * Math.sin(period * time_elapsed);
 
-        x_val = curr_x + ((target_x - curr_x) * (amp * Math.sin(period * time_elapsed)));
-        y_val = curr_y + ((target_y - curr_y) * (amp * Math.sin(period * time_elapsed)));
-        z_val = curr_z + ((target_z - curr_z) * (amp * Math.sin(period * time_elapsed)));
+        // x_val = curr_x + ((target_x - curr_x) * (amp * Math.sin(period * time_elapsed)));
+        // y_val = curr_y + ((target_y - curr_y) * (amp * Math.sin(period * time_elapsed)));
+        // z_val = curr_z + ((target_z - curr_z) * (amp * Math.sin(period * time_elapsed)));
 
-        x_rot = rot_x + ((tar_rot_x - rot_x) * (amp * Math.sin(period * time_elapsed)));
-        y_rot = rot_y + ((tar_rot_y - rot_y) * (amp * Math.sin(period * time_elapsed)));
-        z_rot = rot_z + ((tar_rot_z - rot_z) * (amp * Math.sin(period * time_elapsed)));
+        // x_rot = rot_x + ((tar_rot_x - rot_x) * (amp * Math.sin(period * time_elapsed)));
+        // y_rot = rot_y + ((tar_rot_y - rot_y) * (amp * Math.sin(period * time_elapsed)));
+        // z_rot = rot_z + ((tar_rot_z - rot_z) * (amp * Math.sin(period * time_elapsed)));
+
+        x_val = camera.position.x + ((target_x - curr_x) * sine_out);
+        y_val = camera.position.y + ((target_y - curr_y) * sine_out);
+        z_val = camera.position.z + ((target_z - curr_z) * sine_out);
+
+        x_rot = camera.rotation.x + ((tar_rot_x - rot_x) * sine_out);
+        y_rot = camera.rotation.y + ((tar_rot_y - rot_y) * sine_out);
+        z_rot = camera.rotation.z + ((tar_rot_z - rot_z) * sine_out);
 
     }
     
