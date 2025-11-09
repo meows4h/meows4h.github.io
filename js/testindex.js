@@ -177,6 +177,10 @@ function tween(delta) {
         last_shift.time = time_elapsed;
         last_shift.y_cord = sine_out;
 
+        if (total_shift >= transition_amp) {
+            total_shift = transition_amp;
+        }
+
         x_val = curr_x + ((target_x - curr_x) * total_shift);
         y_val = curr_y + ((target_y - curr_y) * total_shift);
         z_val = curr_z + ((target_z - curr_z) * total_shift);
