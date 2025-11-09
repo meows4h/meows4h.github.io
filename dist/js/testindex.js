@@ -117,9 +117,9 @@ document.addEventListener( 'wheel', ( event ) => {
     let old_scroll = scroll;
     let old_state = page_state;
     scroll += event.deltaY * -1;
-    if (scroll < old_scroll) {
+    if (scroll > old_scroll) {
         page_state--;
-    } else if (scroll > old_scroll) {
+    } else if (scroll < old_scroll) {
         page_state++;
     }
 
@@ -132,6 +132,10 @@ document.addEventListener( 'wheel', ( event ) => {
     transition(old_state);
 
 } );
+
+function degreesToRadians(degrees) {
+  return degrees * (Math.PI / 180);
+}
 
 function tween() {
 
@@ -172,7 +176,7 @@ function transition(old_state) {
         target_x = 5;
         target_y = 5;
         target_z = 0;
-        tar_rot_x = 45;
+        tar_rot_x = degreesToRadians( 20 );
         tar_rot_y = 0;
         tar_rot_z = 0;
     } else if (page_state == 2) {
