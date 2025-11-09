@@ -153,13 +153,15 @@ function tween(delta) {
 
     if (linear_trans == true) {
 
-        x_val = curr_x + ((target_x - curr_x) * (time_elapsed / transition_time));
-        y_val = curr_y + ((target_y - curr_y) * (time_elapsed / transition_time));
-        z_val = curr_z + ((target_z - curr_z) * (time_elapsed / transition_time));
+        let time_shift = time_elapsed / transition_time; // getting value from 0 to 1
 
-        x_rot = rot_x + ((tar_rot_x - rot_x) * (time_elapsed / transition_time));
-        y_rot = rot_y + ((tar_rot_y - rot_y) * (time_elapsed / transition_time));
-        z_rot = rot_z + ((tar_rot_z - rot_z) * (time_elapsed / transition_time));
+        x_val = curr_x + ((target_x - curr_x) * time_shift);
+        y_val = curr_y + ((target_y - curr_y) * time_shift);
+        z_val = curr_z + ((target_z - curr_z) * time_shift);
+
+        x_rot = rot_x + ((tar_rot_x - rot_x) * time_shift);
+        y_rot = rot_y + ((tar_rot_y - rot_y) * time_shift);
+        z_rot = rot_z + ((tar_rot_z - rot_z) * time_shift);
 
     } else {
 
@@ -172,6 +174,9 @@ function tween(delta) {
         let lram = x_change * last_shift.y_cord; // left riemann
         let triangle = (x_change * tri_height) / 2;
         let area = lram + triangle;
+
+        // alternative solution : change to rram and keep rram + triangle, which might overshoot
+        // better to overshoot than undershoot
 
         total_shift += area;
         last_shift.time = time_elapsed;
@@ -254,7 +259,7 @@ function animate() {
         effect.render( scene, camera );
     }
 
-    if (time_elapsed < transition_time) {
+    if (time_elapsed <= transition_time) {
         tween(delta);
         time_elapsed += delta;
     }
