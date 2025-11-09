@@ -16,6 +16,8 @@ let time_elapsed = 0;
 let transition_time = 2;
 let transition_amp = 1;
 let linear_trans = false;
+let total_shift = 0;
+let last_shift = { y_cord: 0, time: 0 };
 
 // internal clock
 const clock = new THREE.Clock();
@@ -145,7 +147,7 @@ function degreesToRadians(degrees) {
   return degrees * (Math.PI / 180);
 }
 
-function tween() {
+function tween(delta) {
 
     let x_val, y_val, z_val, x_rot, y_rot, z_rot;
 
@@ -165,21 +167,23 @@ function tween() {
         let period = (1 / transition_time) * Math.PI;
         let sine_out = amp * Math.sin(period * time_elapsed);
 
-        // x_val = curr_x + ((target_x - curr_x) * (amp * Math.sin(period * time_elapsed)));
-        // y_val = curr_y + ((target_y - curr_y) * (amp * Math.sin(period * time_elapsed)));
-        // z_val = curr_z + ((target_z - curr_z) * (amp * Math.sin(period * time_elapsed)));
+        let x_change = time_elapsed - last_shift.time; // x axis shift
+        let tri_height = sine_out - last_shift.y_cord; // height of triangle at top
+        let lram = x_change * last_shift.y_cord; // left riemann
+        let triangle = (x_change * tri_height) / 2;
+        let area = lram + triangle;
 
-        // x_rot = rot_x + ((tar_rot_x - rot_x) * (amp * Math.sin(period * time_elapsed)));
-        // y_rot = rot_y + ((tar_rot_y - rot_y) * (amp * Math.sin(period * time_elapsed)));
-        // z_rot = rot_z + ((tar_rot_z - rot_z) * (amp * Math.sin(period * time_elapsed)));
+        total_shift += area;
+        last_shift.time = time_elapsed;
+        last_shift.y_cord = sine_out;
 
-        x_val = camera.position.x + ((target_x - curr_x) * sine_out);
-        y_val = camera.position.y + ((target_y - curr_y) * sine_out);
-        z_val = camera.position.z + ((target_z - curr_z) * sine_out);
+        x_val = curr_x + ((target_x - curr_x) * total_shift);
+        y_val = curr_y + ((target_y - curr_y) * total_shift);
+        z_val = curr_z + ((target_z - curr_z) * total_shift);
 
-        x_rot = camera.rotation.x + ((tar_rot_x - rot_x) * sine_out);
-        y_rot = camera.rotation.y + ((tar_rot_y - rot_y) * sine_out);
-        z_rot = camera.rotation.z + ((tar_rot_z - rot_z) * sine_out);
+        x_rot = rot_x + ((tar_rot_x - rot_x) * total_shift);
+        y_rot = rot_y + ((tar_rot_y - rot_y) * total_shift);
+        z_rot = rot_z + ((tar_rot_z - rot_z) * total_shift);
 
     }
     
@@ -195,6 +199,7 @@ function transition(old_state) {
     }
 
     time_elapsed = 0;
+    total_shift = 0;
 
     curr_x = camera.position.x;
     curr_y = camera.position.y;
@@ -246,7 +251,7 @@ function animate() {
     }
 
     if (time_elapsed < transition_time) {
-        tween();
+        tween(delta);
         time_elapsed += delta;
     }
 
