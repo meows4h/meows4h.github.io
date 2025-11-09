@@ -809,7 +809,7 @@ position.add( inp_obj, 'air_dot' )
 gui.add( temp_obj, 'render' )
     .listen()
     .disable();
-gui.add( level_obj, 'level', { Test: 'collision-world.glb', Dust2_bugged: 'de_dust2.glb', City: 'rp_city.glb', Mirage_bugged: 'mirage_minecraft.glb', Miami: 'CityMiami.glb', Desert: 'Desert.glb', Race1: 'Endurance.glb' } )
+gui.add( level_obj, 'level', { Test: 'collision-world.glb', City: 'rp_city.glb' } )
     .onChange( function ( value ) {
 
         level_unload();
