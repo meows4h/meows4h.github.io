@@ -137,9 +137,9 @@ document.addEventListener( 'wheel', ( event ) => {
         page_state = 0;
     } else if (page_state > 2) {
         page_state = 2;
+    } else {
+        transition(old_state);
     }
-
-    transition(old_state);
 
 } );
 
@@ -175,9 +175,6 @@ function tween(delta) {
         let triangle = (x_change * tri_height) / 2;
         if (triangle < 0) { triangle = 0; }
         let area = rram + triangle;
-
-        // alternative solution : change to rram and keep rram + triangle, which might overshoot
-        // better to overshoot than undershoot
 
         total_shift += area;
         last_shift.time = time_elapsed;
