@@ -60,7 +60,7 @@ export function transition(pos, rot, old, curr) {
         return;
     }
 
-    if (page_state == 0) {
+    if (curr == 0) {
 
         pos.tx = 0;
         pos.ty = 0;
@@ -69,7 +69,7 @@ export function transition(pos, rot, old, curr) {
         rot.ty = 0;
         rot.tz = 0;
 
-    } else if (page_state == 1) {
+    } else if (curr == 1) {
 
         pos.tx = 5;
         pos.ty = 5;
@@ -78,7 +78,7 @@ export function transition(pos, rot, old, curr) {
         rot.ty = degreesToRadians( -20 );
         rot.tz = degreesToRadians( -5 );
 
-    } else if (page_state == 2) {
+    } else if (curr == 2) {
 
         pos.tx = 0;
         pos.ty = 0;

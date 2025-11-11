@@ -36,6 +36,9 @@ let time_elapsed = 0;
 let transition_time = 2;
 let transition_type = 1;
 
+// input tracking
+const keyStates = {};
+
 // initialize
 const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = init( animate, document );
 
@@ -81,9 +84,6 @@ scene.add(cube);
 const cube2 = new THREE.Mesh(geometry, material);
 cube2.position.set(2, 2, 2);
 scene.add(cube);
-
-// input tracking
-const keyStates = {};
 
 document.addEventListener( 'keydown', ( event ) => {
 
