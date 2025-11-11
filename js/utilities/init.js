@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 
-export function init( animate, document ) {
+export function init( animate, document, bgcolor ) {
 
     // internal clock
     const clock = new THREE.Clock();
     
     // scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xffffff ); // white fog
-    scene.fog = new THREE.Fog( 0xffffff, 0, 900 );
+    scene.background = new THREE.Color( bgcolor );
+    scene.fog = new THREE.Fog( bgcolor, 0, 900 );
     
     // camera settings
     const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -21,7 +21,7 @@ export function init( animate, document ) {
     scene.add( mainLight );
     
     // directional lighting
-    const directionalLight = new THREE.DirectionalLight( 0xffffff, 2.5 );
+    const directionalLight = new THREE.DirectionalLight( bgcolor, 2.5 );
     directionalLight.position.set( - 5, 25, - 1 );
     directionalLight.castShadow = true;
     directionalLight.shadow.camera.near = 0.01;

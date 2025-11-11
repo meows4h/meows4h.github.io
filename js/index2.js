@@ -8,6 +8,8 @@ import { initGUI } from './utilities/index2gui.js'
 // global vars
 let scroll = 0;
 let page_state = 0;
+const bgcolor = 0x111111;
+const fgcolor = 0xffffff;
 const debug = {
     pagestate: page_state,
     ascii: false
@@ -41,10 +43,10 @@ const transition_vars = {
 const keyStates = {};
 
 // initialize
-const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = init( animate, document );
+const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = init( animate, document, bgcolor );
 
 // ascii effect
-const [effect, asciiContainer] = ascii(renderer);
+const [effect, asciiContainer] = ascii( renderer, fgcolor );
 
 // set camera state to 0
 set_state(cam_position, cam_rotation, camera);
@@ -54,12 +56,12 @@ transition(cam_position, cam_rotation, 1, 0);
 initGUI(asciiContainer, mainContainer, debug, cam_position, cam_rotation, transition_vars, camera);
 
 // test cubes
-addCube(0, 0, 0, 2, 2, 2, scene);
+addCube(0, 0, 0, 2, 2, 2, fgcolor, scene);
 //addCube(2, 2, 2, 2, 2, 2, scene);
-addCube(10, 0, 0, 1, 1, 1, scene);
+addCube(10, 0, 0, 1, 1, 1, fgcolor, scene);
 
 // test text
-addText(0, 3, 0, 'six seven', scene);
+addText(0, 3, 0, 0.3, 0, 0, 'meows', 1.8, 0.1, fgcolor, scene);
 
 document.addEventListener( 'keydown', ( event ) => {
 
