@@ -1,18 +1,23 @@
-import * as THREE from 'three';
+// import * as THREE from 'three';
 
 // additional effects / libraries
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+// import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 // utilties
 import { init } from './utilities/init.js'
 import { ascii } from './utilities/ascii.js'
 import { transition, tween, set_state } from './utilities/tween.js'
+import { addCube, addText } from './utilities/geometry.js'
+import { initGUI } from './utilities/index2gui.js'
 
 // global vars
 let render_ascii = false;
 
 let scroll = 0;
 let page_state = 0;
+const debug = {
+    pagestate: page_state
+}
 
 const cam_position = {
     x: 0,
@@ -50,40 +55,88 @@ set_state(cam_position, cam_rotation, camera);
 transition(cam_position, cam_rotation, 1, 0);
 
 // gui setup
-const gui = new GUI( { width: 150 } );
-gui.add( { ascii: false }, 'ascii' )
-    .onChange( function ( value ) {
+time_elapsed = initGUI(render_ascii, asciiContainer, mainContainer, debug, cam_position, cam_rotation, transition_type, camera, time_elapsed);
+// const gui = new GUI( { width: 150 } );
+// gui.add( { ascii: false }, 'ascii' )
+//     .onChange( function ( value ) {
 
-        render_ascii = value;
+//         render_ascii = value;
 
-        if (value == true) {
-            asciiContainer.style.display = 'block';
-            mainContainer.style.display = 'none';
-        } else {
-            asciiContainer.style.display = 'none';
-            mainContainer.style.display = 'block';
-        }
+//         if (value == true) {
+//             asciiContainer.style.display = 'block';
+//             mainContainer.style.display = 'none';
+//         } else {
+//             asciiContainer.style.display = 'none';
+//             mainContainer.style.display = 'block';
+//         }
 
-    } );
-gui.add( { type: 1 }, 'type', 0, 3 )
-    .onChange( function ( value ) {
+//     } );
+// gui.add( { type: 1 }, 'type', 0, 3 )
+//     .onChange( function ( value ) {
 
-        value = Math.floor(value);
-        transition_type = value;
+//         value = Math.floor(value);
+//         transition_type = value;
 
-    } );
+//     } );
+// gui.add( debug, 'pagestate' )
+//     .listen()
+//     .disable();
 
+// const pos_set = gui.addFolder( 'Position' );
+// pos_set.open( false );
+// pos_set.add( cam_position, 'tx')
+//     .listen()
+//     .onChange( function ( value ) {
+//         set_state(cam_position, cam_rotation, camera);
+//         cam_position.tx = value;
+//         time_elapsed = 0;
+//     } );
+// pos_set.add( cam_position, 'ty')
+//     .listen()
+//     .onChange( function ( value ) {
+//         set_state(cam_position, cam_rotation, camera);
+//         cam_position.ty = value;
+//         time_elapsed = 0;
+//     } );
+// pos_set.add( cam_position, 'tz')
+//     .listen()
+//     .onChange( function ( value ) {
+//         set_state(cam_position, cam_rotation, camera);
+//         cam_position.tz = value;
+//         time_elapsed = 0;
+//     } );
 
-// test cube
-const geometry = new THREE.BoxGeometry(2, 2, 2);
-const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+// const rot_set = gui.addFolder( 'Rotation' );
+// rot_set.open( false );
+// rot_set.add( cam_rotation, 'tx')
+//     .listen()
+//     .onChange( function ( value ) {
+//         set_state(cam_position, cam_rotation, camera);
+//         cam_rotation.tx = value;
+//         time_elapsed = 0;
+//     } );
+// rot_set.add( cam_rotation, 'ty')
+//     .listen()
+//     .onChange( function ( value ) {
+//         set_state(cam_position, cam_rotation, camera);
+//         cam_rotation.ty = value;
+//         time_elapsed = 0;
+//     } );
+// rot_set.add( cam_rotation, 'tz')
+//     .listen()
+//     .onChange( function ( value ) {
+//         set_state(cam_position, cam_rotation, camera);
+//         cam_rotation.tz = value;
+//         time_elapsed = 0;
+//     } );
 
-// addt. cube
-const cube2 = new THREE.Mesh(geometry, material);
-cube2.position.set(2, 2, 2);
-scene.add(cube);
+// test cubes
+addCube(0, 0, 0, 2, 2, 2, scene);
+addCube(2, 2, 2, 2, 2, 2, scene);
+addCube(10, 0, 0, 1, 1, 1, scene);
+
+// test text
+addText(0, 2, 0, 'six seven');
 
 document.addEventListener( 'keydown', ( event ) => {
 
