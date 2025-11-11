@@ -55,11 +55,11 @@ initGUI(asciiContainer, mainContainer, debug, cam_position, cam_rotation, transi
 
 // test cubes
 addCube(0, 0, 0, 2, 2, 2, scene);
-addCube(2, 2, 2, 2, 2, 2, scene);
+//addCube(2, 2, 2, 2, 2, 2, scene);
 addCube(10, 0, 0, 1, 1, 1, scene);
 
 // test text
-addText(0, 2, 0, 'six seven', scene);
+addText(0, 3, 0, 'six seven', scene);
 
 document.addEventListener( 'keydown', ( event ) => {
 
