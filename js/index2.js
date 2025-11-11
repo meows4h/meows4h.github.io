@@ -17,10 +17,10 @@ let page_state = 0;
 const cam_position = {
     x: 0,
     y: 0,
-    z: 0,
+    z: 5,
     tx: 0,
     ty: 0,
-    tz: 0
+    tz: 5
 };
 
 const cam_rotation = {
@@ -41,6 +41,9 @@ const [clock, scene, camera, mainLight, directionalLight, renderer, mainContaine
 
 // ascii effect
 const [effect, asciiContainer] = ascii(renderer);
+
+// set camera state to 0
+transition(cam_position, cam_rotation, 1, 0);
 
 // gui setup
 const gui = new GUI( { width: 150 } );

@@ -36,9 +36,6 @@ export function init( animate ) {
     directionalLight.shadow.bias = - 0.00006;
     scene.add( directionalLight );
     
-    // set camera targets
-    transition(1);
-    
     // renderer
     const renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
