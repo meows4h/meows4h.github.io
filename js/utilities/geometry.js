@@ -20,7 +20,7 @@ export function addText(x, y, z, text, scene) {
     const geometry = new TextGeometry(text, {
         font: font,
         size: 1,
-        depth: 0.5,
+        depth: 0.1,
         curveSegments: 12,
         bevelEnabled: false,
     });
@@ -28,9 +28,10 @@ export function addText(x, y, z, text, scene) {
     geometry.computeBoundingBox();
     geometry.center();
 
-    const material = new THREE.MeshBasicMaterial({ color: 0xff00ff });
+    const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
     const textMesh = new THREE.Mesh(geometry, material);
     textMesh.position.set(x, y, z);
+    textMesh.rotation.set(0.3, 0, 0);
     
     scene.add(textMesh);
     });
