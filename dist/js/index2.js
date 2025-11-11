@@ -8,6 +8,7 @@ import { initGUI } from './utilities/index2gui.js'
 // global vars
 let scroll = 0;
 let page_state = 0;
+let total_states = 3;
 const bgcolor = 0x111111;
 const fgcolor = 0xffffff;
 const debug = {
@@ -36,7 +37,9 @@ const cam_rotation = {
 const transition_vars = {
     elapsed: 0,
     time: 2,
-    type: 1
+    type: 1,
+    waited: 0,
+    lockout: 1.8
 }
 
 // input tracking
@@ -77,23 +80,22 @@ document.addEventListener( 'keyup', ( event ) => {
 
 document.addEventListener( 'wheel', ( event ) => {
 
-    let old_scroll = scroll;
-    let old_state = page_state;
-    scroll += event.deltaY * -1;
-    if (scroll > old_scroll) {
-        page_state--;
-    } else if (scroll < old_scroll) {
-        page_state++;
-    }
+    if (transition_vars.waited >= transition_vars.lockout) {
+        let scroll_old = scroll;
+        let page_old = page_state;
 
-    if (page_state < 0) {
-        page_state = 0;
-    } else if (page_state > 2) {
-        page_state = 2;
-    } else {
-        set_state(cam_position, cam_rotation, camera);
-        transition(cam_position, cam_rotation, old_state, page_state);
-        transition_vars.elapsed = 0;
+        scroll += event.deltaY * -1;
+        if (scroll > scroll_old) page_state--;
+        else if (scroll < scroll_old) page_state++;
+
+        if (page_state < 0) page_state = 0;
+        else if (page_state > total_states) page_state = total_states;
+        else {
+            set_state(cam_position, cam_rotation, camera);
+            transition(cam_position, cam_rotation, page_old, page_state);
+            transition_vars.elapsed = 0;
+            transition_vars.waited = 0;
+        }
     }
 
 } );
@@ -127,6 +129,7 @@ function animate() {
         transition_vars.elapsed += delta;
     }
 
+    transition_vars.waited += delta;
     debug.pagestate = page_state;
 
     // if ( keyStates[ 'KeyW' ] ) { cube.rotation.x -= 1 * delta; }

@@ -71,11 +71,11 @@ export function transition(pos, rot, old, curr) {
 
     } else if (curr == 1) {
 
-        pos.tx = 5;
+        pos.tx = 0;
         pos.ty = 5;
         pos.tz = 0;
         rot.tx = degreesToRadians( -90 );
-        rot.ty = degreesToRadians( -20 );
+        rot.ty = 0;
         rot.tz = degreesToRadians( -5 );
 
     } else if (curr == 2) {
@@ -83,9 +83,18 @@ export function transition(pos, rot, old, curr) {
         pos.tx = 0;
         pos.ty = 0;
         pos.tz = 5;
-        rot.tx = degreesToRadians( -90 );
+        rot.tx = degreesToRadians( 25 );
         rot.ty = 0;
         rot.tz = 0;
+
+    } else if (curr == 3) {
+
+        pos.tx = 0;
+        pos.ty = -5;
+        pos.tz = 0;
+        rot.tx = degreesToRadians( 90 );
+        rot.ty = 0;
+        rot.tz = degreesToRadians( 5 );
 
     }
 
