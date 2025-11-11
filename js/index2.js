@@ -112,7 +112,7 @@ function animate() {
 
     const delta = clock.getDelta();
 
-    if (render_ascii == false) {
+    if (debug.ascii == false) {
         renderer.render( scene, camera );
     } else {
         effect.render( scene, camera );
