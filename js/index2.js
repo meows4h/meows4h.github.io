@@ -124,7 +124,7 @@ function animate() {
         effect.render( scene, camera );
     }
 
-    if (transition_vars.elapsed <= transition_time) {
+    if (transition_vars.elapsed <= transition_vars.time) {
         let [x, y, z, rx, ry, rz] = tween(cam_position, cam_rotation, transition_vars);
         camera.position.set(x, y, z);
         camera.rotation.set(rx, ry, rz);
