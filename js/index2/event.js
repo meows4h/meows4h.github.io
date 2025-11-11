@@ -1,4 +1,6 @@
-function scroll(page, trans, change) {
+import { transition, set_state } from './utilities/tween.js'
+
+function scroll(page, trans, pos, rot, camera, change) {
 
     if (trans.waited >= trans.lockout) {
             let scroll_old = page.scroll;
@@ -11,8 +13,8 @@ function scroll(page, trans, change) {
             if (page.state < 0) page.state = 0;
             else if (page.state > page.total) page.state = page.total;
             else {
-                set_state(cam_position, cam_rotation, camera);
-                transition(cam_position, cam_rotation, page_old, page.state);
+                set_state(pos, rot, camera);
+                transition(pos, rot, page_old, page.state);
                 trans.elapsed = 0;
                 trans.waited = 0;
             }
@@ -20,7 +22,7 @@ function scroll(page, trans, change) {
 
 }
 
-export function initEvents(page, trans, keys, touch, document) {
+export function initEvents(page, trans, keys, touch, pos, rot, camera, document) {
 
     document.addEventListener( 'keydown', ( event ) => {
 
@@ -49,7 +51,7 @@ export function initEvents(page, trans, keys, touch, document) {
     document.addEventListener('touchend', (event) => {
 
         touch.endY = event.changedTouches[0].clientY;
-        handleScroll(page, trans, touch.endY - touch.startY);
+        handleScroll(page, trans, pos, rot, camera, touch.endY - touch.startY);
 
     } );
 

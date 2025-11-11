@@ -29,7 +29,7 @@ addCube(10, 0, 0, 1, 1, 1, colors.fg, scene);
 addText(0, 3, 0, 0.3, 0, 0, 'meows', 1.8, 0.1, colors.fg, scene);
 
 // event setup
-initEvents(page, transition_vars, keyStates, touchStates, document);
+initEvents(page, transition_vars, keyStates, touchStates, cam_position, cam_rotation, camera, document);
 
 window.addEventListener( 'resize', onWindowResize );
 
