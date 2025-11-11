@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export function init( animate ) {
+export function init( animate, document ) {
 
     // internal clock
     const clock = new THREE.Clock();
@@ -45,6 +45,7 @@ export function init( animate ) {
     renderer.shadowMap.type = THREE.VSMShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     
+    // container that the viewer is wrapped in
     const mainContainer = document.getElementById( 'main-container' );
     mainContainer.appendChild( renderer.domElement );
 
