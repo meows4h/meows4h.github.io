@@ -1,13 +1,13 @@
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { set_state } from './tween.js'
 
-export function initGUI(isAscii, asciiCon, mainCon, debug, pos, rot, trans, camera) {
+export function initGUI(asciiCon, mainCon, debug, pos, rot, trans, camera) {
 
     const gui = new GUI( { width: 150 } );
     gui.add( { ascii: false }, 'ascii' )
         .onChange( function ( value ) {
 
-            isAscii = value;
+            debug.ascii = value;
 
             if (value == true) {
                 asciiCon.style.display = 'block';

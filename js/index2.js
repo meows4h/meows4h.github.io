@@ -1,9 +1,4 @@
-// import * as THREE from 'three';
-
-// additional effects / libraries
-// import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-
-// utilties
+// utilities
 import { init } from './utilities/init.js'
 import { ascii } from './utilities/ascii.js'
 import { transition, tween, set_state } from './utilities/tween.js'
@@ -11,12 +6,11 @@ import { addCube, addText } from './utilities/geometry.js'
 import { initGUI } from './utilities/index2gui.js'
 
 // global vars
-let render_ascii = false;
-
 let scroll = 0;
 let page_state = 0;
 const debug = {
-    pagestate: page_state
+    pagestate: page_state,
+    ascii: false
 }
 
 const cam_position = {
@@ -57,7 +51,7 @@ set_state(cam_position, cam_rotation, camera);
 transition(cam_position, cam_rotation, 1, 0);
 
 // gui setup
-initGUI(render_ascii, asciiContainer, mainContainer, debug, cam_position, cam_rotation, transition_vars, camera);
+initGUI(asciiContainer, mainContainer, debug, cam_position, cam_rotation, transition_vars, camera);
 
 // test cubes
 addCube(0, 0, 0, 2, 2, 2, scene);

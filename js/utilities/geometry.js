@@ -25,13 +25,14 @@ export function addText(x, y, z, text, scene) {
         bevelEnabled: false,
     });
 
+    // center the text
+    geometry.computeBoundingBox();
+    geometry.center();
+
     const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
     const textMesh = new THREE.Mesh(geometry, material);
     textMesh.position.set(x, y, z);
-
-    // center the text and add to the scene
-    geometry.computeBoundingBox();
-    geometry.center();
+    
     scene.add(textMesh);
     });
 
