@@ -20,7 +20,7 @@ export function addText(x, y, z, text, scene) {
     const geometry = new TextGeometry(text, {
         font: font,
         size: 1,
-        height: 0.2,
+        height: 0.03,
         curveSegments: 12,
         bevelEnabled: false,
     });
