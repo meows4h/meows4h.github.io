@@ -13,7 +13,7 @@ export function addCube(x, y, z, sx, sy, sz, scene) {
 
 }
 
-export function addText(x, y, z, text) {
+export function addText(x, y, z, text, scene) {
 
     const loader = new FontLoader();
     loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {

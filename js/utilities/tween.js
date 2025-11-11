@@ -14,19 +14,19 @@ function easeOutCubic(t) {
     return 1 - Math.pow(1 - t, 3);
 }
 
-export function tween(pos, rot, time_elapsed, trans_time, trans_type) {
+export function tween(pos, rot, trans) {
 
-    if (trans_time == 0) trans_time = 1;
-    let time_shift = time_elapsed / trans_time;
+    if (trans.time == 0) trans.time = 1;
+    let time_shift = trans.elapsed / trans.time;
     if (time_shift > 1) time_shift = 1;
     if (time_shift < 0) time_shift = 0;
 
     let shift;
-    if (trans_type == 1) {
+    if (trans.type == 1) {
         shift = easeInOutSine(time_shift);
-    } else if (trans_type == 2) {
+    } else if (trans.type == 2) {
         shift = easeInOutQuad(time_shift);
-    } else if (trans_type == 3) {
+    } else if (trans.type == 3) {
         shift = easeOutCubic(time_shift);
     } else {
         shift = time_shift;
