@@ -1,55 +1,20 @@
 // utilities
-import { init } from './utilities/init.js'
+import { initGlobals } from './index2/globals.js'
+import { initScene } from './utilities/sceneinit.js'
 import { ascii } from './utilities/ascii.js'
 import { transition, tween, set_state } from './utilities/tween.js'
 import { addCube, addText } from './utilities/geometry.js'
-import { initGUI } from './utilities/index2gui.js'
+import { initGUI } from './index2/gui.js'
+import { initEvents } from './index2/event.js'
 
 // global vars
-let scroll = 0;
-let page_state = 0;
-let total_states = 3;
-const bgcolor = 0x111111;
-const fgcolor = 0xffffff;
-const debug = {
-    pagestate: page_state,
-    ascii: false
-}
+const [page, colors, debug, cam_position, cam_rotation, transition_vars, keyStates, touchStates] = initGlobals();
 
-const cam_position = {
-    x: 0,
-    y: 0,
-    z: 5,
-    tx: 0,
-    ty: 0,
-    tz: 5
-};
-
-const cam_rotation = {
-    x: 0,
-    y: 0,
-    z: 0,
-    tx: 0,
-    ty: 0,
-    tz: 0
-}
-
-const transition_vars = {
-    elapsed: 0,
-    time: 2,
-    type: 1,
-    waited: 0,
-    lockout: 1.8
-}
-
-// input tracking
-const keyStates = {};
-
-// initialize
-const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = init( animate, document, bgcolor );
+// initialize scene
+const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = initScene( animate, document, colors.bg );
 
 // ascii effect
-const [effect, asciiContainer] = ascii( renderer, fgcolor );
+const [effect, asciiContainer] = ascii( renderer, colors.fg );
 
 // set camera state to 0
 set_state(cam_position, cam_rotation, camera);
@@ -58,47 +23,13 @@ transition(cam_position, cam_rotation, 1, 0);
 // gui setup
 initGUI(asciiContainer, mainContainer, debug, cam_position, cam_rotation, transition_vars, camera);
 
-// test cubes
-addCube(0, 0, 0, 2, 2, 2, fgcolor, scene);
-//addCube(2, 2, 2, 2, 2, 2, scene);
-addCube(10, 0, 0, 1, 1, 1, fgcolor, scene);
+// add geometry
+addCube(0, 0, 0, 2, 2, 2, colors.fg, scene);
+addCube(10, 0, 0, 1, 1, 1, colors.fg, scene);
+addText(0, 3, 0, 0.3, 0, 0, 'meows', 1.8, 0.1, colors.fg, scene);
 
-// test text
-addText(0, 3, 0, 0.3, 0, 0, 'meows', 1.8, 0.1, fgcolor, scene);
-
-document.addEventListener( 'keydown', ( event ) => {
-
-    keyStates[ event.code ] = true;
-
-} );
-
-document.addEventListener( 'keyup', ( event ) => {
-
-    keyStates[ event.code ] = false;
-
-} );
-
-document.addEventListener( 'wheel', ( event ) => {
-
-    if (transition_vars.waited >= transition_vars.lockout) {
-        let scroll_old = scroll;
-        let page_old = page_state;
-
-        scroll += event.deltaY * -1;
-        if (scroll > scroll_old) page_state--;
-        else if (scroll < scroll_old) page_state++;
-
-        if (page_state < 0) page_state = 0;
-        else if (page_state > total_states) page_state = total_states;
-        else {
-            set_state(cam_position, cam_rotation, camera);
-            transition(cam_position, cam_rotation, page_old, page_state);
-            transition_vars.elapsed = 0;
-            transition_vars.waited = 0;
-        }
-    }
-
-} );
+// event setup
+initEvents(page, transition_vars, keyStates, touchStates, document);
 
 window.addEventListener( 'resize', onWindowResize );
 
@@ -130,11 +61,6 @@ function animate() {
     }
 
     transition_vars.waited += delta;
-    debug.pagestate = page_state;
-
+    debug.pagestate = page.state;
     // if ( keyStates[ 'KeyW' ] ) { cube.rotation.x -= 1 * delta; }
-    // if ( keyStates[ 'KeyA' ] ) { cube.rotation.y += 1 * delta; }
-    // if ( keyStates[ 'KeyS' ] ) { cube.rotation.x += 1 * delta; }
-    // if ( keyStates[ 'KeyD' ] ) { cube.rotation.y -= 1 * delta; }
-
 }
