@@ -20,16 +20,15 @@ export function addText(x, y, z, text, scene) {
     const geometry = new TextGeometry(text, {
         font: font,
         size: 1,
-        height: 0.03,
+        depth: 0.5,
         curveSegments: 12,
         bevelEnabled: false,
     });
 
-    // center the text
     geometry.computeBoundingBox();
     geometry.center();
 
-    const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    const material = new THREE.MeshBasicMaterial({ color: 0xff00ff });
     const textMesh = new THREE.Mesh(geometry, material);
     textMesh.position.set(x, y, z);
     
