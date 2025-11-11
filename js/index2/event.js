@@ -38,7 +38,7 @@ export function initEvents(page, trans, keys, touch, pos, rot, camera, document)
 
     document.addEventListener( 'wheel', ( event ) => {
 
-        scroll(page, trans, event.deltaY * -1);
+        scroll(page, trans, pos, rot, camera, event.deltaY * -1);
 
     } );
 
