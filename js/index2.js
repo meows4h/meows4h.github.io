@@ -37,12 +37,13 @@ let transition_time = 2;
 let transition_type = 1;
 
 // initialize
-const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = init( animate );
+const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = init( animate, document );
 
 // ascii effect
 const [effect, asciiContainer] = ascii(renderer);
 
 // set camera state to 0
+set_state(cam_position, cam_rotation, camera);
 transition(cam_position, cam_rotation, 1, 0);
 
 // gui setup
