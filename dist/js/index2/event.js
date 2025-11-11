@@ -51,7 +51,7 @@ export function initEvents(page, trans, keys, touch, pos, rot, camera, document)
     document.addEventListener('touchend', (event) => {
 
         touch.endY = event.changedTouches[0].clientY;
-        handleScroll(page, trans, pos, rot, camera, touch.endY - touch.startY);
+        scroll(page, trans, pos, rot, camera, touch.endY - touch.startY);
 
     } );
 
