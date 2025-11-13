@@ -3,6 +3,10 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
+function degreesToRadians(degrees) {
+  return degrees * (Math.PI / 180);
+}
+
 export function addCube(x, y, z, sx, sy, sz, color, scene) {
 
     const geometry = new THREE.BoxGeometry(sx, sy, sz);
@@ -23,12 +27,17 @@ export function addOctahedron(x, y, z, r, d, color, scene) {
 
 }
 
-export function addPlane(x, y, z, w, h, color, scene) {
+export function addPlane(x, y, z, rx, ry, rz, w, h, color, scene) {
+
+    rx = degreesToRadians(rx);
+    ry = degreesToRadians(ry);
+    rz = degreesToRadians(rz);
 
     const geometry = new THREE.PlaneGeometry(w, h);
     const material = new THREE.MeshBasicMaterial({ color: color });
     const plane = new THREE.Mesh(geometry, material);
     plane.position.set(x, y, z);
+    plane.rotation.set(rx, ry, rz);
     scene.add(plane);
 
 }
@@ -37,6 +46,10 @@ export function addText(x, y, z, rx, ry, rz, text, size, depth, color, scene) {
 
     const loader = new FontLoader();
     loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+
+    rx = degreesToRadians(rx);
+    ry = degreesToRadians(ry);
+    rz = degreesToRadians(rz);
 
     const geometry = new TextGeometry(text, {
 
