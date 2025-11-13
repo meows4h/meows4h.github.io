@@ -1,11 +1,11 @@
 // utilities
-import { initGlobals } from './index2/globals.js'
+import { initGlobals } from './utilities/index2/globals.js'
 import { initScene } from './utilities/sceneinit.js'
 import { ascii } from './utilities/ascii.js'
 import { transition, tween, set_state } from './utilities/tween.js'
-import { addCube, addText } from './utilities/geometry.js'
-import { initGUI } from './index2/gui.js'
-import { initEvents } from './index2/event.js'
+import { addCube, addOctahedron, addText } from './utilities/geometry.js'
+import { initGUI } from './utilities/index2/gui.js'
+import { initEvents } from './utilities/index2/event.js'
 
 // global vars
 const [page, colors, debug, cam_position, cam_rotation, transition_vars, keyStates, touchStates] = initGlobals();
@@ -24,9 +24,9 @@ transition(cam_position, cam_rotation, 1, 0);
 initGUI(asciiContainer, mainContainer, debug, cam_position, cam_rotation, transition_vars, camera);
 
 // add geometry
-addCube(0, 0, 0, 2, 2, 2, colors.fg, scene);
+addOctahedron(0, 0, 0, 2, 1, colors.fg, scene);
 addCube(10, 0, 0, 1, 1, 1, colors.fg, scene);
-addText(0, 3, 0, 0.3, 0, 0, 'meows', 1.8, 0.1, colors.fg, scene);
+addText(0, 3, 0, 0.3, 0, 0, 'rox', 1.8, 0.1, colors.fg, scene);
 
 // event setup
 initEvents(page, transition_vars, keyStates, touchStates, cam_position, cam_rotation, camera, document);

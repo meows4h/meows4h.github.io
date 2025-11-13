@@ -13,6 +13,15 @@ export function addCube(x, y, z, sx, sy, sz, color, scene) {
 
 }
 
+export function addOctahedron(x, y, z, r, d, color, scene) {
+
+    const geometry = new THREE.OctahedronGeometry(r, d);
+    const material = new THREE.MeshBasicMaterial({ color: color });
+    const octa = new THREE.Mesh(geometry, material);
+    octa.position.set(x, y, z);
+    scene.add(octa);
+}
+
 export function addText(x, y, z, rx, ry, rz, text, size, depth, color, scene) {
 
     const loader = new FontLoader();
