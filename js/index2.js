@@ -25,7 +25,7 @@ initGUI(asciiContainer, mainContainer, debug, cam_position, cam_rotation, transi
 
 // add geometry
 addOctahedron(0, 0, 0, 2.2, 0, colors.fg, scene);
-addPlane(0, -8, 0, 90, 100, 100, colors.fg, scene);
+addPlane(0, -8, 0, 90, 0, 0, 100, 100, colors.fg, scene);
 addCube(10, 0, 0, 1, 1, 1, colors.fg, scene);
 addText(0, 3, 0, 30, 0, 0, 'hello world', 1.8, 0.1, colors.fg, scene);
 
