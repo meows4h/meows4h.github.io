@@ -24,10 +24,10 @@ transition(cam_position, cam_rotation, 1, 0);
 initGUI(asciiContainer, mainContainer, debug, cam_position, cam_rotation, transition_vars, camera);
 
 // add geometry
-addOctahedron(0, 0, 0, 2.2, 0, colors.fg, scene);
-addPlane(0, -8, 0, 90, 0, 0, 100, 100, colors.fg, scene);
+addOctahedron(0, 0, 0, 1.7, 0, colors.fg, scene);
+addPlane(0, -6, 0, 1.5, 0, 0, 10, 10, colors.fg, scene);
 addCube(10, 0, 0, 1, 1, 1, colors.fg, scene);
-addText(0, 3, 0, 30, 0, 0, 'hello world', 1.8, 0.1, colors.fg, scene);
+addText(0, 3, 0, 0.3, 0, 0, 'hello world', 1.8, 0.1, colors.fg, scene);
 
 // event setup
 initEvents(page, transition_vars, keyStates, touchStates, cam_position, cam_rotation, camera, document);
