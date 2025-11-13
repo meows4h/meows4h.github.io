@@ -1,4 +1,4 @@
-import { transition, set_state } from '../utilities/tween.js'
+import { transition, set_state } from 'utilities/tween.js'
 
 function scroll(page, trans, pos, rot, camera, change) {
 
