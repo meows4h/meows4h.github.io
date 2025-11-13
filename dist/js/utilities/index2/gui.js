@@ -1,5 +1,5 @@
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { set_state } from '../utilities/tween.js'
+import { set_state } from 'utilities/tween.js'
 
 export function initGUI(asciiCon, mainCon, debug, pos, rot, trans, camera) {
 
