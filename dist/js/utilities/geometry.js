@@ -29,10 +29,6 @@ export function addOctahedron(x, y, z, r, d, color, scene) {
 
 export function addPlane(x, y, z, rx, ry, rz, w, h, color, scene) {
 
-    rx = degreesToRadians(rx);
-    ry = degreesToRadians(ry);
-    rz = degreesToRadians(rz);
-
     const geometry = new THREE.PlaneGeometry(w, h);
     const material = new THREE.MeshBasicMaterial({ color: color });
     const plane = new THREE.Mesh(geometry, material);
@@ -46,10 +42,6 @@ export function addText(x, y, z, rx, ry, rz, text, size, depth, color, scene) {
 
     const loader = new FontLoader();
     loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-
-    rx = degreesToRadians(rx);
-    ry = degreesToRadians(ry);
-    rz = degreesToRadians(rz);
 
     const geometry = new TextGeometry(text, {
 
