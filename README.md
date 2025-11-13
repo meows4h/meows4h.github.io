@@ -14,5 +14,5 @@ Within the `dist` directory, there are a couple of files:
 - `index.html` is the home page content that gets served
 
 ## Extras
-- `meows4h.github.io/pages/ascii.html` shows off a 3D playspace with a moveable camera, controls, collision checking, as well as rendering the output to ASCII characters
+- `meows4h.github.io/pages/ascii-test.html` shows off a 3D playspace with a moveable camera, controls, collision checking, as well as rendering the output to ASCII characters
 - `meows4h.github.io/pages/movement.html` shows off a 3D playspace with all the same as `ascii.html` but it more properly incorperates the Quake movement implementation. So far the ground and air acceleration functions have been mostly implemented, as well as the baseline functionality of the friction function, without the pathfinding for edges in the playspace. It also now features a variety of different playspaces as well as a full debug UI.
