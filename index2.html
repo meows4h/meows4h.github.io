@@ -10,8 +10,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="icon" type="image/x-icon" href="./images/icon.png">
         <style>
-			body {
-				margin: 0;
+			body,
+			html {
+			position: fixed;
+			margin: 0;
+			overscroll-behavior: none;
 			}
 			.lil-gui {
 				--background-color: #000000;
@@ -29,7 +32,7 @@
     </head>
 
     <body>
-        <!-- import mapping three.js -->
+        <!-- import mapping javascript files -->
         <script type="importmap">
 			{
 				"imports": {

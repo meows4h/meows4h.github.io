@@ -20,6 +20,17 @@ export function addOctahedron(x, y, z, r, d, color, scene) {
     const octa = new THREE.Mesh(geometry, material);
     octa.position.set(x, y, z);
     scene.add(octa);
+
+}
+
+export function addPlane(x, y, z, w, h, color, scene) {
+
+    const geometry = new THREE.PlaneGeometry(w, h);
+    const material = new THREE.MeshBasicMaterial({ color: color });
+    const plane = new THREE.Mesh(geometry, material);
+    plane.position.set(x, y, z);
+    scene.add(plane);
+
 }
 
 export function addText(x, y, z, rx, ry, rz, text, size, depth, color, scene) {

@@ -7,8 +7,8 @@ export function initGlobals() {
     }
 
     const colors = {
-        fg: 0xffffff,
-        bg: 0x111111
+        fg: 0xfdfdfd,
+        bg: 0x030303
     }
 
     const debug = {
