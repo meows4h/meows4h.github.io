@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export function initScene( animate, document, bgcolor ) {
+export function initScene( animate, bgcolor ) {
 
     // internal clock
     const clock = new THREE.Clock();

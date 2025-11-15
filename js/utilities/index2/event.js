@@ -22,7 +22,7 @@ function scroll(page, trans, pos, rot, camera, change) {
 
 }
 
-export function initEvents(page, trans, keys, touch, pos, rot, camera, document) {
+export function initEvents(page, trans, keys, touch, pos, rot, camera) {
 
     document.addEventListener( 'keydown', ( event ) => {
 
