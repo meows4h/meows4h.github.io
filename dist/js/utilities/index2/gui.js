@@ -1,23 +1,27 @@
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { set_state } from 'utilities/tween.js'
 
-export function initGUI(asciiCon, mainCon, debug, pos, rot, trans, camera) {
+export function initGUI(fx, debug, pos, rot, trans, camera) {
 
     const gui = new GUI( { width: 150 } );
-    gui.add( { ascii: false }, 'ascii' )
-        .onChange( function ( value ) {
+    gui.add( fx, 'setEffect', { None: 'none', Ascii: 'ascii', Outline: 'outline' } )
+    .onChange( function ( value ) {
 
-            debug.ascii = value;
+        if (value == 'none') {
+            fx.mainCon.style.display = 'block';
+            fx.asciiCon.style.display = 'none';
+            fx.outCon.style.display = 'none';
+        } else if (value == 'ascii') {
+            fx.mainCon.style.display = 'none';
+            fx.asciiCon.style.display = 'block';
+            fx.outCon.style.display = 'none';
+        } else if (value == 'outline') {
+            fx.mainCon.style.display = 'none';
+            fx.asciiCon.style.display = 'none';
+            fx.outCon.style.display = 'block';
+        }
 
-            if (value == true) {
-                asciiCon.style.display = 'block';
-                mainCon.style.display = 'none';
-            } else {
-                asciiCon.style.display = 'none';
-                mainCon.style.display = 'block';
-            }
-
-        } );
+    } );
 
     gui.add( { type: 1 }, 'type', 0, 3 )
         .onChange( function ( value ) {
