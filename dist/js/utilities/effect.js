@@ -15,7 +15,7 @@ function ascii( renderer, color ) {
 
 }
 
-function outline( renderer ) {
+function outline( renderer, document ) {
 
     const effect = new OutlineEffect ( renderer );
     effect.setSize( window.innerWidth, window.innerHeight );
@@ -27,15 +27,17 @@ function outline( renderer ) {
 
 }
 
-export function getEffects ( renderer, color ) {
+export function getEffects ( renderer, color, document ) {
 
     const [asciiEffect, asciiContainer] = ascii( renderer, color );
-    const [outlineEffect, outlineContainer] = outline( renderer );
+    const [outlineEffect, outlineContainer] = outline( renderer, document );
     const fx = {
         ascii: asciiEffect,
         asciiCon: asciiContainer,
         outline: outlineEffect,
         outCon: outlineContainer
-    }
+    };
+
+    return fx;
 
 }
