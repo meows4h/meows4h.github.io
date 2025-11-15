@@ -14,7 +14,7 @@ const [page, colors, debug, cam_position, cam_rotation, transition_vars, keyStat
 const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = initScene( animate, colors.bg );
 
 // initialize effects
-const effects = getEffects( render, colors.fg );
+const effects = getEffects( renderer, colors.fg );
 effects.mainCon = mainContainer;
 effects.setEffect = 'none';
 
@@ -42,7 +42,8 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
-    asciiEffect.setSize( window.innerWidth, window.innerHeight );
+    effects.ascii.setSize( window.innerWidth, window.innerHeight );
+    effects.outline.setSize( window.innerWidth, window.innerHeight );
 
 }
 
