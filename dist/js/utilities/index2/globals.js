@@ -13,7 +13,6 @@ export function initGlobals() {
 
     const debug = {
         pagestate: page.state,
-        ascii: false
     }
 
     const pos = {

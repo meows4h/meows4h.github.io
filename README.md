@@ -9,10 +9,10 @@ This file (`README.md`) will improve with time as the site becomes more clear as
 Within the `dist` directory, there are a couple of files:
 - `css` contains any .css files that need to be loaded
 - `images` contains any image assets
-- `js` contains all the JavaScript scripts that run parts of the site
+- `js` contains all the JavaScript that run parts of the site
 - `pages` contains all the additional pages beyond the `index.html` content
 - `index.html` is the home page content that gets served
 
 ## Extras
 - `meows4h.github.io/pages/ascii-test.html` shows off a 3D playspace with a moveable camera, controls, collision checking, as well as rendering the output to ASCII characters
-- `meows4h.github.io/pages/movement.html` shows off a 3D playspace with all the same as `ascii.html` but it more properly incorperates the Quake movement implementation. So far the ground and air acceleration functions have been mostly implemented, as well as the baseline functionality of the friction function, without the pathfinding for edges in the playspace. It also now features a variety of different playspaces as well as a full debug UI.
+- `meows4h.github.io/pages/movement.html` shows off a 3D playspace with all the same as `ascii-test.html` but it more properly incorperates the Quake movement implementation. So far the ground and air acceleration functions have been mostly implemented, as well as the baseline functionality of the friction function, without the pathfinding for edges in the playspace. It also now features a variety of different playspaces as well as a full debug UI.

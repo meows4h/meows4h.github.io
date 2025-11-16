@@ -8,10 +8,10 @@ function ascii( renderer, color ) {
     effect.domElement.style.color = color;
     effect.domElement.style.backgroundColor = 'black';
 
-    const asciiContainer = document.getElementById( 'ascii-container' );
-    asciiContainer.appendChild( effect.domElement );
+    const container = document.getElementById( 'ascii-container' );
+    container.appendChild( effect.domElement );
 
-    return [effect, asciiContainer];
+    return [effect, container];
 
 }
 
@@ -20,10 +20,10 @@ function outline( renderer, document ) {
     const effect = new OutlineEffect ( renderer );
     effect.setSize( window.innerWidth, window.innerHeight );
 
-    const outlineContainer = document.getElementById( 'outline-container' );
-    outlineContainer.appendChild( effect.domElement );
+    const container = document.getElementById( 'outline-container' );
+    // container.appendChild( effect.domElement );
 
-    return [effect, outlineContainer];
+    return [effect, container];
 
 }
 

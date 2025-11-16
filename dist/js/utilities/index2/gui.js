@@ -16,9 +16,9 @@ export function initGUI(fx, debug, pos, rot, trans, camera) {
             fx.asciiCon.style.display = 'block';
             fx.outCon.style.display = 'none';
         } else if (value == 'outline') {
-            fx.mainCon.style.display = 'none';
+            fx.mainCon.style.display = 'block';
             fx.asciiCon.style.display = 'none';
-            fx.outCon.style.display = 'block';
+            fx.outCon.style.display = 'none';
         }
 
     } );
