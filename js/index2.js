@@ -51,10 +51,14 @@ function animate() {
 
     const delta = clock.getDelta();
 
-    if (debug.ascii == false) {
+    if (effects.setEffect == 'none') {
         renderer.render( scene, camera );
+    } else if (effects.setEffect == 'ascii') {
+        effects.ascii.render( scene, camera );
+    } else if (effects.setEffect == 'outline') {
+        effects.outline.render( scene, camera );
     } else {
-        asciiEffect.render( scene, camera );
+        renderer.render( scene, camera );
     }
 
     if (transition_vars.elapsed <= transition_vars.time) {
