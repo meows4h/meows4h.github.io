@@ -10,15 +10,12 @@ export function initGUI(fx, debug, pos, rot, trans, camera) {
         if (value == 'none') {
             fx.mainCon.style.display = 'block';
             fx.asciiCon.style.display = 'none';
-            fx.outCon.style.display = 'none';
         } else if (value == 'ascii') {
             fx.mainCon.style.display = 'none';
             fx.asciiCon.style.display = 'block';
-            fx.outCon.style.display = 'none';
         } else if (value == 'outline') {
             fx.mainCon.style.display = 'block';
             fx.asciiCon.style.display = 'none';
-            fx.outCon.style.display = 'none';
         }
 
     } );

@@ -14,7 +14,7 @@ const [page, colors, debug, cam_position, cam_rotation, transition_vars, keyStat
 const [clock, scene, camera, mainLight, directionalLight, renderer, mainContainer] = initScene( animate, colors.bg );
 
 // initialize effects
-const effects = getEffects( renderer, colors.fg, document );
+const effects = getEffects( renderer, colors.fg );
 effects.mainCon = mainContainer;
 effects.setEffect = 'none';
 
