@@ -200,7 +200,7 @@ function updatePlayer( deltaTime ) {
 
 function updateCamera() {
 
-    camera.position = cube.position;
+    camera.position.copy(cube.position);
     camera.position.add(cameraOffset);
     camera.lookAt(cube.position);
 
