@@ -139,15 +139,12 @@ document.addEventListener('wheel', (event) => {
 
 document.body.addEventListener( 'mousemove', ( event ) => {
 
-    const cameraDir = new Vector3();
-    cameraDir = camera.rotation;
-
     if ( document.pointerLockElement === document.body ) {
 
-        cameraDir.x -= event.movementX / 500;
-        cameraDir.y -= event.movementY / 500;
+        camera.rotation.x -= event.movementX / 500;
+        camera.rotation.y -= event.movementY / 500;
 
-        camera.translateOnAxis(cameraDir, currentCameraDist);
+        camera.translateOnAxis(camera.rotation, currentCameraDist);
 
     }
 
@@ -198,15 +195,14 @@ function updatePlayer( deltaTime ) {
 
     const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime);
     cube.position.add(deltaPosition);
-    playerPosition = cube.position;
 
 }
 
 function updateCamera() {
 
-    camera.position = playerPosition;
+    camera.position = cube.position;
     camera.position.add(cameraOffset);
-    camera.lookAt(playerPosition);
+    camera.lookAt(cube.position);
 
 }
 
