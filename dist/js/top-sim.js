@@ -55,6 +55,53 @@ scene.add( cube );
 
 const playerVelocity = new THREE.Vector3();
 const playerPosition = new THREE.Vector3();
+const cameraOffset = new THREE.Vector3();
+
+const maxCameraDist = 4;
+const minCameraDist = 0.2;
+const cameraIncrement = 0.1;
+let currentCameraDist = maxCameraDist;
+cameraOffset.y = currentCameraDist;
+
+// floor
+
+let floorGeometry = new THREE.PlaneGeometry( 20000, 20000, 1000, 1000 );
+floorGeometry.rotateX( - Math.PI / 2 );
+
+// vertex displacement
+
+let position = floorGeometry.attributes.position;
+
+for ( let i = 0, l = position.count; i < l; i ++ ) {
+
+    vertex.fromBufferAttribute( position, i );
+
+    vertex.x += Math.random() * 20 - 10;
+    vertex.y += Math.random() * 2;
+    vertex.z += Math.random() * 20 - 10;
+
+    position.setXYZ( i, vertex.x, vertex.y, vertex.z );
+
+}
+
+floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
+
+position = floorGeometry.attributes.position;
+const colorsFloor = [];
+
+for ( let i = 0, l = position.count; i < l; i ++ ) {
+
+    color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
+    colorsFloor.push( color.r, color.g, color.b );
+
+}
+
+floorGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colorsFloor, 3 ) );
+
+const floorMaterial = new THREE.MeshBasicMaterial( { vertexColors: true } );
+
+const floor = new THREE.Mesh( floorGeometry, floorMaterial );
+scene.add( floor );
 
 const keyStates = {};
 document.addEventListener( 'keydown', ( event ) => {
@@ -69,6 +116,41 @@ document.addEventListener( 'keyup', ( event ) => {
 
 } );
 
+container.addEventListener( 'mousedown', () => {
+
+    document.body.requestPointerLock();
+
+} );
+
+document.addEventListener('wheel', (event) => {
+    if (event.deltaY > 0) {
+        if (currentCameraDist < maxCameraDist) {
+            currentCameraDist = currentCameraDist + cameraIncrement;
+        }
+    } else if (event.deltaY < 0) {
+        if (currentCameraDist > minCameraDist) {
+            currentCameraDist = currentCameraDist - cameraIncrement;
+        }
+    }
+});
+
+document.body.addEventListener( 'mousemove', ( event ) => {
+
+    const cameraDir = new Vector3();
+    cameraDir = camera.rotation;
+
+    if ( document.pointerLockElement === document.body ) {
+
+        cameraDir.x -= event.movementX / 500;
+        cameraDir.y -= event.movementY / 500;
+
+        camera.translateOnAxis(cameraDir, currentCameraDist);
+
+    }
+
+} );
+
+
 window.addEventListener( 'resize', onWindowResize );
 
 function onWindowResize() {
@@ -80,50 +162,48 @@ function onWindowResize() {
 
 }
 
-function controls( deltaTime ) {
+function controls() {
 
     if ( keyStates[ 'KeyW' ] ) {
-        playerVelocity.x = 1
+        playerVelocity.x = 1;
     }
-    if ( keyStates[ 'KeyS' ] ) {
-        playerVelocity.x = -1
+    else if ( keyStates[ 'KeyS' ] ) {
+        playerVelocity.x = -1;
+    } 
+    else {
+        playerVelocity.x = 0;
     }
+    
     if ( keyStates[ 'KeyD' ] ) {
-        playerVelocity.z = 1
+        playerVelocity.z = 1;
     }
-    if ( keyStates[ 'KeyA' ] ) {
-        playerVelocity.z = -1
+    else if ( keyStates[ 'KeyA' ] ) {
+        playerVelocity.z = -1;
     }
-    if ( keyStates[ 'KeyR' ] ) {
-        playerVelocity.x = 0
-        playerVelocity.z = 0
+    else {
+        playerVelocity.z = 0;
     }
+
+    // if ( keyStates[ 'KeyR' ] ) {
+    //     playerVelocity.x = 0;
+    //     playerVelocity.z = 0;
+    // }
 
 }
 
-function updatePlayer() {
-    if (playerVelocity.x > 0) {
-        cube.position.x = cube.position.x + 1
-    }
-    if (playerVelocity.x < 0) {
-        cube.position.x = cube.position.x - 1
-    }
-    if (playerVelocity.z > 0) {
-        cube.position.z = cube.position.z + 1
-    }
-    if (playerVelocity.z < 0) {
-        cube.position.z = cube.position.z - 1
-    }
+function updatePlayer( deltaTime ) {
 
-    playerPosition.y = cube.position.y
-    playerPosition.x = cube.position.x
-    playerPosition.z = cube.position.z
+    const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime);
+    cube.position.add(deltaPosition);
+    playerPosition = cube.position;
 
 }
 
 function updateCamera() {
 
-    camera.lookAt(playerPosition)
+    camera.position = playerPosition;
+    camera.position.add(cameraOffset);
+    camera.lookAt(playerPosition);
 
 }
 
@@ -135,11 +215,11 @@ function animate() {
 
     for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
 
-        controls( deltaTime );
+        controls();
 
-        updatePlayer()
+        updatePlayer( deltaTime );
 
-        updateCamera()
+        updateCamera();
         
     }
 
