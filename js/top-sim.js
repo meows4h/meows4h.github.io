@@ -11,6 +11,8 @@ import { Capsule } from 'three/addons/math/Capsule.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
+const timer = new THREE.Timer()
+
 const scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x88ccee );
 scene.fog = new THREE.Fog( 0x88ccee, 0, 900 );
@@ -38,7 +40,7 @@ stats.domElement.style.position = 'absolute';
 stats.domElement.style.top = '0px';
 container.appendChild( stats.domElement );
 
-const sphereGeometry = new THREE.IcosahedronGeometry( SPHERE_RADIUS, 5 );
+const sphereGeometry = new THREE.IcosahedronGeometry( 1, 5 );
 const sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xdede8d } );
 
 const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
@@ -87,7 +89,7 @@ function animate() {
 
     const STEPS_PER_FRAME = 1
 
-    const deltaTime = Math.min( 0.05, clock.getDelta() ) / STEPS_PER_FRAME;
+    const deltaTime = Math.min( 0.05, timer.getDelta() ) / STEPS_PER_FRAME;
 
     for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
 
