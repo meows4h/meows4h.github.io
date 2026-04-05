@@ -54,7 +54,6 @@ const cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
 
 const playerVelocity = new THREE.Vector3();
-const playerPosition = new THREE.Vector3();
 const cameraOffset = new THREE.Vector3();
 
 const maxCameraDist = 4;
@@ -251,5 +250,9 @@ function animate() {
     renderer.render( scene, camera );
 
     stats.update();
+
+    console.log(cube.position);
+    console.log(camera.position);
+    console.log(camera.rotation);
 
 }
