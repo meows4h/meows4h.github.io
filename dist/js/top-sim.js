@@ -144,7 +144,7 @@ document.body.addEventListener( 'mousemove', ( event ) => {
         camera.rotation.x -= event.movementX / 500;
         camera.rotation.y -= event.movementY / 500;
 
-        camera.translateOnAxis(camera.rotation, currentCameraDist);
+        // camera.translateOnAxis(camera.rotation, currentCameraDist);
 
     }
 
@@ -199,8 +199,28 @@ function controls() {
 
 function updatePlayer( deltaTime ) {
 
-    const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime * 5);
-    cube.position.add(deltaPosition);
+    // const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime * 5);
+    if (playerVelocity.x > 0) {
+        cube.position.x += 5 * deltaTime;
+    }
+    else if (playerVelocity.x < 0) {
+        cube.position.x -= 5 * deltaTime;
+    }
+
+    if (playerVelocity.y > 0) {
+        cube.position.y += 5 * deltaTime;
+    }
+    else if (playerVelocity.y < 0) {
+        cube.position.y -= 5 * deltaTime;
+    }
+
+    if (playerVelocity.z > 0) {
+        cube.position.z += 5 * deltaTime;
+    }
+    else if (playerVelocity.z < 0) {
+        cube.position.z -= 5 * deltaTime;
+    }
+    
 
 }
 
