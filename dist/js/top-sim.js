@@ -65,6 +65,9 @@ cameraOffset.y = currentCameraDist;
 
 // floor
 
+const vertex = new THREE.Vector3();
+const color = new THREE.Color();
+
 let floorGeometry = new THREE.PlaneGeometry( 20000, 20000, 1000, 1000 );
 floorGeometry.rotateX( - Math.PI / 2 );
 
