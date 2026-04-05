@@ -83,20 +83,20 @@ function onWindowResize() {
 function controls( deltaTime ) {
 
     if ( keyStates[ 'KeyW' ] ) {
-        playerVelocity.x.set(1)
+        playerVelocity.x = 1
     }
     if ( keyStates[ 'KeyS' ] ) {
-        playerVelocity.x.set(-1)
+        playerVelocity.x = -1
     }
     if ( keyStates[ 'KeyD' ] ) {
-        playerVelocity.z.set(1)
+        playerVelocity.z = 1
     }
     if ( keyStates[ 'KeyA' ] ) {
-        playerVelocity.z.set(-1)
+        playerVelocity.z = -1
     }
     if ( keyStates[ 'KeyR' ] ) {
-        playerVelocity.x.set(0)
-        playerVelocity.z.set(0)
+        playerVelocity.x = 0
+        playerVelocity.z = 0
     }
 
 }
