@@ -184,6 +184,12 @@ function controls() {
         playerVelocity.z = 0;
     }
 
+    if ( keyStates[ 'KeyZ' ]) {
+        playerVelocity.y = 1;
+    } else if ( keyStates[ 'KeyX' ]) {
+        playerVelocity.y = -1;
+    }
+
     // if ( keyStates[ 'KeyR' ] ) {
     //     playerVelocity.x = 0;
     //     playerVelocity.z = 0;
@@ -193,7 +199,7 @@ function controls() {
 
 function updatePlayer( deltaTime ) {
 
-    const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime);
+    const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime * 5);
     cube.position.add(deltaPosition);
 
 }
