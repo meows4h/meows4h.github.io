@@ -19,6 +19,7 @@ scene.fog = new THREE.Fog( 0x88ccee, 0, 900 );
 
 const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.rotation.order = 'YXZ';
+camera.position.set(0, 2, 5);
 
 const fillLight1 = new THREE.HemisphereLight( 0x8dc1de, 0x00668d, 1.5 );
 fillLight1.position.set( 2, 1, 1 );
@@ -140,8 +141,8 @@ document.body.addEventListener( 'mousemove', ( event ) => {
 
     if ( document.pointerLockElement === document.body ) {
 
-        camera.rotation.x -= event.movementX / 500;
-        camera.rotation.y -= event.movementY / 500;
+        camera.rotation.y -= event.movementX / 500;
+        camera.rotation.x -= event.movementY / 500;
 
         // camera.translateOnAxis(camera.rotation, currentCameraDist);
 
@@ -225,6 +226,7 @@ function updatePlayer( deltaTime ) {
 
 function updateCamera() {
 
+    cameraOffset.set(0, 2, currentCameraDist);
     camera.position.copy(cube.position);
     camera.position.add(cameraOffset);
     camera.lookAt(cube.position);
