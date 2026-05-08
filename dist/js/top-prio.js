@@ -1,3 +1,4 @@
+// randomly sorting an array
 function permute(arr) {
     for (var i = arr.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -8,11 +9,13 @@ function permute(arr) {
     return arr;
 }
 
+// getting random party combinations
 function permuteParty() {
     var arr = [1, 2, 3, 4, 5, 6, 7, 8];
     return permute(arr);
 }
 
+// resetting game state
 function resetState() {
     var elements = document.querySelectorAll(".reset");
     elements.forEach(function (element) {
