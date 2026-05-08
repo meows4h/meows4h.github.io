@@ -98,39 +98,39 @@ button.button:focus {
 /* Fight buffs/debuffs */
 
 .near {
-    content: url("https://xivapi.com/i/215000/215141_hr1.png");
+    content: url("https://xivapi.com/i/015000/015141_hr1.png");
 }
 
 .distant {
-    content: url("https://xivapi.com/i/215000/215142_hr1.png");
+    content: url("https://xivapi.com/i/015000/015142_hr1.png");
 }
 
 .first {
-    content: url("https://xivapi.com/i/215000/215401_hr1.png");
+    content: url("https://xivapi.com/i/015000/015401_hr1.png");
 }
 
 .second {
-    content: url("https://xivapi.com/i/215000/215402_hr1.png");
+    content: url("https://xivapi.com/i/015000/015402_hr1.png");
 }
 
 .dyn1 {
-    content: url("https://xivapi.com/i/219000/219657_hr1.png");
+    content: url("https://cafemaker.wakingsands.com/i/219000/219657_hr1.png");
 }
 
 .dyn2 {
-    content: url("https://xivapi.com/i/219000/219658_hr1.png");
+    content: url("https://cafemaker.wakingsands.com/i/219000/219658_hr1.png");
 }
 
 .dyn3 {
-    content: url("https://xivapi.com/i/219000/219659_hr1.png");
+    content: url("https://cafemaker.wakingsands.com/i/219000/219659_hr1.pngg");
 }
 
 .mid {
-    content: url("https://xivapi.com/i/215000/215129_hr1.png");
+    content: url("https://xivapi.com/i/015000/015129_hr1.png");
 }
 
 .remote {
-    content: url("https://xivapi.com/i/215000/215130_hr1.png");
+    content: url("https://xivapi.com/i/015000/015130_hr1.png");
 }
 
 /* Marks */
