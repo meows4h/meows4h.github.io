@@ -1,4 +1,4 @@
-.icon {
+.party {
     width: min(565px, 100%);
     position: relative;
     display: grid;
@@ -6,6 +6,24 @@
     grid-template-columns: 48px max(20%, 300px) min(10%, 32px) min(10%, 32px) min(10%, 32px) min(10%, 32px) min(10%, 32px);
     grid-auto-columns: 48px;
     gap: 0px 6px;
+}
+
+.layout {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 300px 565px 600px;
+    grid-template-rows: 1fr min(60px, 2fr) 6fr 3fr;
+}
+
+.icon {
+    width: min(max(48px, 100%), 64px);
+    position: absolute;
+    aspect-ratio: 1/1;
+    grid-row: 1;
+    grid-column: 1;
+    justify-self: center;
+    align-self: center;
+    z-index: 1;
 }
 
 .party_list {
