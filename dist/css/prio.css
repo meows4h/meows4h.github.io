@@ -1,0 +1,82 @@
+.icon {
+    width: min(max(48px, 100%), 64px);
+    position: absolute;
+    aspect-ratio: 1/1;
+    grid-row: 1;
+    grid-column: 1;
+    justify-self: center;
+    align-self: center;
+    z-index: 1;
+}
+
+/* Fight buffs/debuffs */
+
+.near {
+    content: url("https://xivapi.com/i/215000/215141_hr1.png");
+}
+
+.distant {
+    content: url("https://xivapi.com/i/215000/215142_hr1.png");
+}
+
+.first {
+    content: url("https://xivapi.com/i/215000/215401_hr1.png");
+}
+
+.second {
+    content: url("https://xivapi.com/i/215000/215402_hr1.png");
+}
+
+.dyn1 {
+    content: url("https://xivapi.com/i/219000/219657_hr1.png");
+}
+
+.dyn2 {
+    content: url("https://xivapi.com/i/219000/219658_hr1.png");
+}
+
+.dyn3 {
+    content: url("https://xivapi.com/i/219000/219659_hr1.png");
+}
+
+.mid {
+    content: url("https://xivapi.com/i/215000/215129_hr1.png");
+}
+
+.remote {
+    content: url("https://xivapi.com/i/215000/215130_hr1.png");
+}
+
+/* Marks */
+
+.attack1 {
+    content: url("https://xivapi.com/i/061000/061201_hr1.png");
+}
+
+.attack2 {
+    content: url("https://xivapi.com/i/061000/061202_hr1.png");
+}
+
+.attack3 {
+    content: url("https://xivapi.com/i/061000/061203_hr1.png");
+}
+
+.attack4 {
+    content: url("https://xivapi.com/i/061000/061204_hr1.png");
+}
+
+.attack5 {
+    content: url("https://xivapi.com/i/061000/061205_hr1.png");
+}
+
+.bind1 {
+    content: url("https://xivapi.com/i/061000/061211_hr1.png");
+}
+
+.bind2 {
+    content: url("https://xivapi.com/i/061000/061212_hr1.png");
+}
+
+.bind3 {
+    content: url("https://xivapi.com/i/061000/061213_hr1.png");
+}
