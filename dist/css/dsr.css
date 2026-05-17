@@ -9,4 +9,6 @@ img {
 
 .game-div {
     position: relative;
+    width: 400px;
+    height: 400px;
 }
