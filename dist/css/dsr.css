@@ -6,3 +6,7 @@ html {
 img {
     position: absolute;
 }
+
+.game-div {
+    position: relative;
+}
