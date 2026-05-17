@@ -59,14 +59,14 @@ function generateTowers() {
             }
 
             if (currSetGen <= 0) {
-                towers.append(quadNum + towerNum);
+                towers.push(quadNum + towerNum);
                 currSetGen++;
                 totalGen++;
             } else {
                 // roll for chance + add tower
                 let chance = getRandomInt(1, 3);
                 if (chance == 2) {
-                    towers.append(quadNum + towerNum);
+                    towers.push(quadNum + towerNum);
                     currSetGen++;
                     totalGen++;
                 }
@@ -79,7 +79,7 @@ function generateTowers() {
         if (totalGen >= 8) {
             return;
         }
-        towers.append(12 + towerNum);
+        towers.push(12 + towerNum);
         totalGen++;
     });
     return towers;
@@ -103,6 +103,10 @@ function startGame() {
         let towerElement = document.getElementById(`tower${towerNum}`);
         towerElement.style.display = "block";
     });
+
+    // supps are 1, dps 2
+    var preyGroup = getRandomInt(1, 2);
+
 
 }
 
