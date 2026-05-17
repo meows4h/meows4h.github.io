@@ -44,6 +44,7 @@ function permuteThrees() {
 function generateTowers() {
     var towers = [];
     var quadArr = permuteOrder();
+    var quadIndex = 0;
 
     var totalGen = 0;
     var currSetGen = 0;
@@ -65,6 +66,9 @@ function generateTowers() {
             } else {
                 // roll for chance + add tower
                 let chance = getRandomInt(1, 3);
+                if (totalGen <= 4 && quadIndex == 3) {
+                    chance = 2;
+                }
                 if (chance == 2) {
                     towers.push(quadNum + towerNum);
                     currSetGen++;
@@ -72,6 +76,7 @@ function generateTowers() {
                 }
             }
         });
+        quadIndex++;
     });
     var innerArr = permuteFours();
     innerArr.forEach(function (towerNum) {
@@ -107,6 +112,14 @@ function startGame() {
     // supps are 1, dps 2
     var preyGroup = getRandomInt(1, 2);
 
+    var choosePrey = permuteFours();
+    var preyOne = choosePrey[0];
+    var preyTwo = choosePrey[1];
+
+    if (preyGroup == 2) {
+        preyOne += 4;
+        preyTwo += 4;
+    }
 
 }
 
