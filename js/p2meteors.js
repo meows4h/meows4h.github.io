@@ -99,13 +99,14 @@ function startGame() {
     // towers spots are 0 -> 11 starting north and going CW
     // the inner spots start NE 12 -> 15
     var towers = generateTowers();
+    towers.forEach(function (towerNum) {
+        let towerElement = document.getElementById(`tower${towerNum}`);
+        towerElement.style.display = "block";
+    });
 
 }
 
-// Get the button element by its ID
 const startButton = document.getElementById("startButton");
-
-// Add an event listener to run the function when clicked
 startButton.addEventListener("click", function() {
     hideTowers();
     startGame();
