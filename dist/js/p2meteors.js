@@ -97,6 +97,12 @@ function hideTowers() {
     }
 }
 
+function movePlayer(playerID, leftPos, topPos) {
+    let playerElement = document.getElementById(`player${playerID}`);
+    playerElement.style.left = `${leftPos}`;
+    playerElement.style.top = `${topPos}`;
+}
+
 function startGame() {
     passCheck = true;
     step = 0;
@@ -120,6 +126,8 @@ function startGame() {
         preyOne += 4;
         preyTwo += 4;
     }
+
+    movePlayer(8, "190px", "230px");
 
 }
 
