@@ -7,8 +7,16 @@ img {
     position: absolute;
 }
 
+.playerDisplay {
+    transition: all .5s ease;
+}
+
 .game-div {
     position: relative;
     width: 400px;
     height: 400px;
+}
+
+.prey {
+    content: url("https://xivapi.com/i/015000/015026_hr1.png");
 }
